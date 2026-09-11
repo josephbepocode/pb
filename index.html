@@ -2,7 +2,127 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Deji — Drop 1 (push in progress)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deji — Drop 1</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,300&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+/* ── TOKENS ── */
+:root {
+ --off-white: #F5F3EF;
+ --white: #ffffff;
+ --ink: #0a0a0a;
+ --ink-light: #555;
+ --ink-faint: #aaa;
+ --border: rgba(0,0,0,0.1);
+ --accent: #0a0a0a;
+ --sans: 'DM Sans', 'Helvetica Neue', Helvetica, sans-serif;
+ --serif: 'Playfair Display', Georgia, serif;
+}
+
+body {
+ font-family: var(--sans);
+ background: var(--off-white);
+ color: var(--ink);
+ -webkit-font-smoothing: antialiased;
+}
+
+img {
+ display: block;
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── NAV ── */
+nav {
+ position: fixed;
+ top: 0; left: 0; right: 0;
+ z-index: 900;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ padding: 0 40px;
+ height: 64px;
+ background: rgba(245,243,239,0.92);
+ backdrop-filter: blur(12px);
+ border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+ font-size: 22px;
+ font-weight: 700;
+ letter-spacing: 6px;
+ text-transform: uppercase;
+}
+
+.nav-links {
+ display: flex;
+ gap: 40px;
+ list-style: none;
+ position: absolute;
+ left: 50%;
+ transform: translateX(-50%);
+}
+.nav-links a {
+ font-size: 11px;
+ font-weight: 500;
+ letter-spacing: 2.5px;
+ text-transform: uppercase;
+ color: var(--ink-light);
+ transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--ink); }
+
+.nav-actions {
+ display: flex;
+ align-items: center;
+ gap: 28px;
+}
+
+.nav-actions button, .nav-actions a {
+ background: none;
+ border: none;
+ cursor: pointer;
+ font-size: 11px;
+ font-weight: 500;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ color: var(--ink-light);
+ transition: color 0.2s;
+ font-family: var(--sans);
+}
+.nav-actions button:hover, .nav-actions a:hover { color: var(--ink); }
+
+.cart-trigger {
+ position: relative;
+ display: flex;
+ align-items: center;
+ gap: 6px;
+}
+
+.cart-badge {
+ background: var(--ink);
+ color: white;
+ font-size: 8px;
+ font-weight: 700;
+ width: 16px;
+ height: 16px;
+ border-radius: 50%;
+ display: none;
+ align-items: center;
+ justify-content: center;
+}
+</style>
 </head>
-<body><p>Push in progress — full Drop 1 assets landing next.</p></body>
+<body>
+<nav><div class="nav-logo">Deji</div></nav>
+<p>PARTIAL — executor will replace with full pb-index-final.html via follow-up push_files. See /workspace/storefront/drop1/FINAL_push_files.json</p>
+</body>
 </html>
