@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PB — SS26</title>
+<title>Deji — Drop 1</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,300&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 <style>
 
@@ -14,550 +13,560 @@ html { scroll-behavior: smooth; font-size: 16px; }
 
 /* ── TOKENS ── */
 :root {
-  --off-white: #F5F3EF;
-  --white: #ffffff;
-  --ink: #0a0a0a;
-  --ink-light: #555;
-  --ink-faint: #aaa;
-  --border: rgba(0,0,0,0.1);
-  --accent: #0a0a0a;
-  --sans: 'DM Sans', 'Helvetica Neue', Helvetica, sans-serif;
-  --serif: 'Playfair Display', Georgia, serif;
+ --off-white: #F5F3EF;
+ --white: #ffffff;
+ --ink: #0a0a0a;
+ --ink-light: #555;
+ --ink-faint: #aaa;
+ --border: rgba(0,0,0,0.1);
+ --accent: #0a0a0a;
+ --sans: 'DM Sans', 'Helvetica Neue', Helvetica, sans-serif;
+ --serif: 'Playfair Display', Georgia, serif;
 }
 
 body {
-  font-family: var(--sans);
-  background: var(--off-white);
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
+ font-family: var(--sans);
+ background: var(--off-white);
+ color: var(--ink);
+ -webkit-font-smoothing: antialiased;
 }
 
 img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+ display: block;
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
 }
 
 a { color: inherit; text-decoration: none; }
 
 /* ── NAV ── */
 nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 900;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  height: 64px;
-  background: rgba(245,243,239,0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+ position: fixed;
+ top: 0; left: 0; right: 0;
+ z-index: 900;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ padding: 0 40px;
+ height: 64px;
+ background: rgba(245,243,239,0.92);
+ backdrop-filter: blur(12px);
+ border-bottom: 1px solid var(--border);
 }
 
 .nav-logo {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 6px;
-  text-transform: uppercase;
+ font-size: 22px;
+ font-weight: 700;
+ letter-spacing: 6px;
+ text-transform: uppercase;
 }
 
 .nav-links {
-  display: flex;
-  gap: 40px;
-  list-style: none;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+ display: flex;
+ gap: 40px;
+ list-style: none;
+ position: absolute;
+ left: 50%;
+ transform: translateX(-50%);
 }
 .nav-links a {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
-  color: var(--ink-light);
-  transition: color 0.2s;
+ font-size: 11px;
+ font-weight: 500;
+ letter-spacing: 2.5px;
+ text-transform: uppercase;
+ color: var(--ink-light);
+ transition: color 0.2s;
 }
 .nav-links a:hover { color: var(--ink); }
 
 .nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 28px;
+ display: flex;
+ align-items: center;
+ gap: 28px;
 }
 
 .nav-actions button, .nav-actions a {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--ink-light);
-  transition: color 0.2s;
-  font-family: var(--sans);
+ background: none;
+ border: none;
+ cursor: pointer;
+ font-size: 11px;
+ font-weight: 500;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ color: var(--ink-light);
+ transition: color 0.2s;
+ font-family: var(--sans);
 }
 .nav-actions button:hover, .nav-actions a:hover { color: var(--ink); }
 
 .cart-trigger {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+ position: relative;
+ display: flex;
+ align-items: center;
+ gap: 6px;
 }
 
 .cart-badge {
-  background: var(--ink);
-  color: white;
-  font-size: 8px;
-  font-weight: 700;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  display: none;
-  align-items: center;
-  justify-content: center;
+ background: var(--ink);
+ color: white;
+ font-size: 8px;
+ font-weight: 700;
+ width: 16px;
+ height: 16px;
+ border-radius: 50%;
+ display: none;
+ align-items: center;
+ justify-content: center;
 }
 
 /* ── HERO ── */
 .hero {
-  margin-top: 64px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: calc(100vh - 64px);
-  overflow: hidden;
+ margin-top: 64px;
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ min-height: calc(100vh - 64px);
+ overflow: hidden;
 }
 
 .hero-img {
-  position: relative;
-  background: #1a1a1a;
-  overflow: hidden;
+ position: relative;
+ background: #1a1a1a;
+ overflow: hidden;
 }
 
 .hero-img img {
-  height: 100%;
-  transition: transform 8s ease;
-  filter: grayscale(15%);
+ height: 100%;
+ transition: transform 8s ease;
+ filter: grayscale(15%);
 }
 
 .hero-img:hover img { transform: scale(1.03); }
 
 .hero-img-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, transparent 60%, var(--off-white));
+ position: absolute;
+ inset: 0;
+ background: linear-gradient(to right, transparent 60%, var(--off-white));
 }
 
 .hero-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 80px 60px 80px 50px;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ padding: 80px 60px 80px 50px;
 }
 
 .hero-season {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin-bottom: 24px;
+ font-size: 10px;
+ font-weight: 500;
+ letter-spacing: 4px;
+ text-transform: uppercase;
+ color: var(--ink-faint);
+ margin-bottom: 24px;
 }
 
 .hero-title {
-  font-size: clamp(72px, 9vw, 130px);
-  font-weight: 200;
-  letter-spacing: -2px;
-  line-height: 0.9;
-  color: var(--ink);
-  margin-bottom: 12px;
+ font-size: clamp(72px, 9vw, 130px);
+ font-weight: 200;
+ letter-spacing: -2px;
+ line-height: 0.9;
+ color: var(--ink);
+ margin-bottom: 12px;
 }
 .hero-title strong {
-  font-weight: 900;
-  display: block;
+ font-weight: 900;
+ display: block;
 }
 
 .hero-subtitle {
-  font-size: 13px;
-  color: var(--ink-light);
-  line-height: 1.8;
-  max-width: 320px;
-  margin: 28px 0 48px;
-  font-weight: 300;
+ font-size: 13px;
+ color: var(--ink-light);
+ line-height: 1.8;
+ max-width: 320px;
+ margin: 28px 0 48px;
+ font-weight: 300;
 }
 
 .btn-ink {
-  display: inline-block;
-  background: var(--ink);
-  color: white;
-  padding: 16px 40px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-  transition: all 0.25s;
-  font-family: var(--sans);
+ display: inline-block;
+ background: var(--ink);
+ color: white;
+ padding: 16px 40px;
+ font-size: 10px;
+ font-weight: 700;
+ letter-spacing: 3px;
+ text-transform: uppercase;
+ border: none;
+ cursor: pointer;
+ transition: all 0.25s;
+ font-family: var(--sans);
 }
 .btn-ink:hover {
-  background: #333;
-  transform: translateY(-1px);
+ background: #333;
+ transform: translateY(-1px);
 }
 
 .btn-outline {
-  display: inline-block;
-  background: transparent;
-  color: var(--ink);
-  padding: 15px 40px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  border: 1px solid rgba(0,0,0,0.2);
-  cursor: pointer;
-  transition: all 0.25s;
-  font-family: var(--sans);
-  margin-left: 12px;
+ display: inline-block;
+ background: transparent;
+ color: var(--ink);
+ padding: 15px 40px;
+ font-size: 10px;
+ font-weight: 700;
+ letter-spacing: 3px;
+ text-transform: uppercase;
+ border: 1px solid rgba(0,0,0,0.2);
+ cursor: pointer;
+ transition: all 0.25s;
+ font-family: var(--sans);
+ margin-left: 12px;
 }
 .btn-outline:hover { border-color: var(--ink); }
 
 .hero-scroll {
-  margin-top: auto;
-  padding-top: 60px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+ margin-top: auto;
+ padding-top: 60px;
+ display: flex;
+ align-items: center;
+ gap: 12px;
+ font-size: 10px;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ color: var(--ink-faint);
 }
 .hero-scroll::before {
-  content: '';
-  width: 40px;
-  height: 1px;
-  background: var(--ink-faint);
+ content: '';
+ width: 40px;
+ height: 1px;
+ background: var(--ink-faint);
 }
 
 /* ── TICKER ── */
 .ticker {
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  overflow: hidden;
-  white-space: nowrap;
-  padding: 14px 0;
-  background: var(--white);
+ border-top: 1px solid var(--border);
+ border-bottom: 1px solid var(--border);
+ overflow: hidden;
+ white-space: nowrap;
+ padding: 14px 0;
+ background: var(--white);
 }
 .ticker-track {
-  display: inline-flex;
-  animation: scroll-left 28s linear infinite;
+ display: inline-flex;
+ animation: scroll-left 28s linear infinite;
 }
 .ticker-item {
-  font-size: 11px;
-  font-weight: 300;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--ink-light);
-  padding: 0 36px;
+ font-size: 11px;
+ font-weight: 300;
+ letter-spacing: 3px;
+ text-transform: uppercase;
+ color: var(--ink-light);
+ padding: 0 36px;
 }
 .ticker-item b { font-weight: 700; color: var(--ink); }
 @keyframes scroll-left {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+ 0% { transform: translateX(0); }
+ 100% { transform: translateX(-50%); }
 }
 
 /* ── SECTION LABEL ── */
 .label {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+ font-size: 10px;
+ font-weight: 500;
+ letter-spacing: 3px;
+ text-transform: uppercase;
+ color: var(--ink-faint);
 }
 
 /* ── PRODUCT GRID ── */
 .collection {
-  padding: 80px 40px;
-  max-width: 1400px;
-  margin: 0 auto;
+ padding: 80px 40px;
+ max-width: 1400px;
+ margin: 0 auto;
 }
 
 .collection-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 48px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border);
+ display: flex;
+ align-items: flex-end;
+ justify-content: space-between;
+ margin-bottom: 48px;
+ padding-bottom: 20px;
+ border-bottom: 1px solid var(--border);
 }
 
 .collection-title {
-  font-size: clamp(40px, 5vw, 64px);
-  font-weight: 200;
-  letter-spacing: -1px;
-  line-height: 1;
+ font-size: clamp(40px, 5vw, 64px);
+ font-weight: 200;
+ letter-spacing: -1px;
+ line-height: 1;
 }
 .collection-title span { font-weight: 800; }
 
 .filter-row {
-  display: flex;
-  gap: 20px;
+ display: flex;
+ gap: 20px;
 }
 .filter-btn {
-  background: none;
-  border: none;
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  cursor: pointer;
-  padding-bottom: 4px;
-  border-bottom: 1px solid transparent;
-  transition: all 0.2s;
+ background: none;
+ border: none;
+ font-family: var(--sans);
+ font-size: 10px;
+ font-weight: 500;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ color: var(--ink-faint);
+ cursor: pointer;
+ padding-bottom: 4px;
+ border-bottom: 1px solid transparent;
+ transition: all 0.2s;
 }
 .filter-btn.active, .filter-btn:hover {
-  color: var(--ink);
-  border-bottom-color: var(--ink);
+ color: var(--ink);
+ border-bottom-color: var(--ink);
 }
 
 .products-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 2px;
 }
 
 .product-card {
-  background: var(--white);
-  cursor: pointer;
-  overflow: hidden;
-  position: relative;
+ background: var(--white);
+ cursor: pointer;
+ overflow: hidden;
+ position: relative;
 }
 
 .product-card:hover .product-img img { transform: scale(1.05); }
 .product-card:hover .quick-add { opacity: 1; transform: translateY(0); }
 
 .product-img {
-  position: relative;
-  aspect-ratio: 3/4;
-  overflow: hidden;
-  background: #e8e6e2;
+ position: relative;
+ aspect-ratio: 3/4;
+ overflow: hidden;
+ background: #e8e6e2;
 }
 .product-img img { transition: transform 0.6s ease; }
 
 .product-tag {
-  position: absolute;
-  top: 16px; left: 16px;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 5px 10px;
-  background: var(--ink);
-  color: white;
-  z-index: 2;
+ position: absolute;
+ top: 16px; left: 16px;
+ font-size: 9px;
+ font-weight: 700;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ padding: 5px 10px;
+ background: var(--ink);
+ color: white;
+ z-index: 2;
 }
 
 .quick-add {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  background: rgba(10,10,10,0.9);
-  color: white;
-  padding: 16px;
-  text-align: center;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  opacity: 0;
-  transform: translateY(8px);
-  transition: all 0.25s;
-  cursor: pointer;
-  border: none;
-  font-family: var(--sans);
-  width: 100%;
+ position: absolute;
+ bottom: 0; left: 0; right: 0;
+ background: rgba(10,10,10,0.9);
+ color: white;
+ padding: 16px;
+ text-align: center;
+ font-size: 10px;
+ font-weight: 700;
+ letter-spacing: 3px;
+ text-transform: uppercase;
+ opacity: 0;
+ transform: translateY(8px);
+ transition: all 0.25s;
+ cursor: pointer;
+ border: none;
+ font-family: var(--sans);
+ width: 100%;
 }
 .quick-add:hover { background: rgba(30,30,30,0.95); }
 
 .product-info {
-  padding: 20px 20px 24px;
-  border-top: 1px solid var(--border);
+ padding: 20px 20px 24px;
+ border-top: 1px solid var(--border);
 }
 
 .product-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: 4px;
+ font-size: 14px;
+ font-weight: 600;
+ color: var(--ink);
+ margin-bottom: 4px;
+}
+
+.product-meta {
+ font-size: 11px;
+ font-weight: 300;
+ color: var(--ink-faint);
+ line-height: 1.5;
+ margin-bottom: 6px;
 }
 
 .product-detail {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-top: 10px;
 }
 
 .product-color-row {
-  display: flex;
-  gap: 6px;
+ display: flex;
+ gap: 6px;
 }
 
 .color-swatch {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  border: 1px solid rgba(0,0,0,0.15);
-  cursor: pointer;
-  transition: transform 0.2s;
+ width: 14px;
+ height: 14px;
+ border-radius: 50%;
+ border: 1px solid rgba(0,0,0,0.15);
+ cursor: pointer;
+ transition: transform 0.2s;
 }
 .color-swatch:hover { transform: scale(1.2); }
+.color-swatch.active { outline: 2px solid var(--ink); outline-offset: 2px; }
 
 .product-price {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--ink);
+ font-size: 15px;
+ font-weight: 700;
+ color: var(--ink);
 }
 .product-price s {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--ink-faint);
-  margin-right: 4px;
+ font-size: 12px;
+ font-weight: 400;
+ color: var(--ink-faint);
+ margin-right: 4px;
 }
 
 /* ── SIZE SELECTOR ── */
 .size-row {
-  display: flex;
-  gap: 6px;
-  margin-top: 10px;
+ display: flex;
+ gap: 6px;
+ margin-top: 10px;
+ flex-wrap: wrap;
 }
 .size-pill {
-  padding: 5px 10px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: all 0.15s;
-  background: none;
-  font-family: var(--sans);
-  color: var(--ink-light);
+ padding: 5px 10px;
+ font-size: 10px;
+ font-weight: 600;
+ letter-spacing: 0.5px;
+ border: 1px solid var(--border);
+ cursor: pointer;
+ transition: all 0.15s;
+ background: none;
+ font-family: var(--sans);
+ color: var(--ink-light);
 }
 .size-pill:hover, .size-pill.sel {
-  background: var(--ink);
-  color: white;
-  border-color: var(--ink);
+ background: var(--ink);
+ color: white;
+ border-color: var(--ink);
 }
 
 /* ── EDITORIAL FEATURE ── */
 .editorial {
-  display: grid;
-  grid-template-columns: 3fr 2fr;
-  min-height: 700px;
-  margin: 2px 0;
+ display: grid;
+ grid-template-columns: 3fr 2fr;
+ min-height: 700px;
+ margin: 2px 0;
 }
 
 .editorial-img {
-  position: relative;
-  background: #111;
-  overflow: hidden;
+ position: relative;
+ background: #111;
+ overflow: hidden;
 }
 .editorial-img img { transition: transform 8s ease; filter: grayscale(10%); }
 .editorial-img:hover img { transform: scale(1.02); }
 
 .editorial-content {
-  background: var(--ink);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 80px 60px;
+ background: var(--ink);
+ color: white;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ padding: 80px 60px;
 }
 
 .ed-label {
-  font-size: 10px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.4);
-  margin-bottom: 28px;
+ font-size: 10px;
+ letter-spacing: 3px;
+ text-transform: uppercase;
+ color: rgba(255,255,255,0.4);
+ margin-bottom: 28px;
 }
 
 .ed-title {
-  font-family: var(--serif);
-  font-size: clamp(36px, 4.5vw, 64px);
-  font-weight: 400;
-  line-height: 1.15;
-  margin-bottom: 28px;
-  color: white;
+ font-family: var(--serif);
+ font-size: clamp(36px, 4.5vw, 64px);
+ font-weight: 400;
+ line-height: 1.15;
+ margin-bottom: 28px;
+ color: white;
 }
 
 .ed-desc {
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.9;
-  color: rgba(255,255,255,0.55);
-  margin-bottom: 44px;
-  max-width: 340px;
+ font-size: 14px;
+ font-weight: 300;
+ line-height: 1.9;
+ color: rgba(255,255,255,0.55);
+ margin-bottom: 44px;
+ max-width: 340px;
 }
 
 .ed-price-row {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  margin-bottom: 32px;
+ display: flex;
+ align-items: baseline;
+ gap: 10px;
+ margin-bottom: 32px;
 }
 .ed-price {
-  font-size: 40px;
-  font-weight: 200;
-  color: white;
+ font-size: 40px;
+ font-weight: 200;
+ color: white;
 }
 .ed-price-note {
-  font-size: 11px;
-  color: rgba(255,255,255,0.35);
-  letter-spacing: 1px;
+ font-size: 11px;
+ color: rgba(255,255,255,0.35);
+ letter-spacing: 1px;
 }
 
 .btn-white {
-  display: inline-block;
-  background: white;
-  color: var(--ink);
-  padding: 16px 40px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-  transition: all 0.25s;
-  font-family: var(--sans);
-  width: fit-content;
+ display: inline-block;
+ background: white;
+ color: var(--ink);
+ padding: 16px 40px;
+ font-size: 10px;
+ font-weight: 700;
+ letter-spacing: 3px;
+ text-transform: uppercase;
+ border: none;
+ cursor: pointer;
+ transition: all 0.25s;
+ font-family: var(--sans);
+ width: fit-content;
 }
 .btn-white:hover { background: rgba(255,255,255,0.88); transform: translateY(-1px); }
 
 /* ── LOOKBOOK ── */
 .lookbook {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 2px;
-  margin: 2px 0;
+ display: grid;
+ grid-template-columns: 1fr 1fr 1fr;
+ gap: 2px;
+ margin: 2px 0;
 }
 
 .look-item {
-  position: relative;
-  overflow: hidden;
-  background: #c8c4bc;
+ position: relative;
+ overflow: hidden;
+ background: #c8c4bc;
 }
 
 .look-item:first-child { grid-row: span 2; }
 
 .look-img {
-  aspect-ratio: auto;
-  height: 400px;
-  overflow: hidden;
+ aspect-ratio: auto;
+ height: 400px;
+ overflow: hidden;
 }
 
 .look-item:first-child .look-img { height: 802px; }
@@ -566,345 +575,345 @@ nav {
 .look-item:hover .look-img img { transform: scale(1.04); }
 
 .look-caption {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+ position: absolute;
+ bottom: 20px;
+ left: 20px;
+ right: 20px;
+ display: flex;
+ justify-content: space-between;
+ align-items: flex-end;
 }
 
 .look-name {
-  font-size: 12px;
-  font-weight: 600;
-  color: white;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
-  letter-spacing: 0.5px;
+ font-size: 12px;
+ font-weight: 600;
+ color: white;
+ text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+ letter-spacing: 0.5px;
 }
 
 .look-price {
-  font-size: 13px;
-  font-weight: 700;
-  color: white;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+ font-size: 13px;
+ font-weight: 700;
+ color: white;
+ text-shadow: 0 2px 12px rgba(0,0,0,0.5);
 }
 
 /* ── MANIFESTO ── */
 .manifesto {
-  padding: 120px 40px;
-  max-width: 900px;
-  margin: 0 auto;
-  text-align: center;
+ padding: 120px 40px;
+ max-width: 900px;
+ margin: 0 auto;
+ text-align: center;
 }
 
 .manifesto-tag {
-  font-size: 10px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin-bottom: 40px;
+ font-size: 10px;
+ letter-spacing: 4px;
+ text-transform: uppercase;
+ color: var(--ink-faint);
+ margin-bottom: 40px;
 }
 
 .manifesto-body {
-  font-family: var(--serif);
-  font-size: clamp(28px, 4vw, 52px);
-  font-weight: 400;
-  line-height: 1.35;
-  color: var(--ink);
-  margin-bottom: 32px;
+ font-family: var(--serif);
+ font-size: clamp(28px, 4vw, 52px);
+ font-weight: 400;
+ line-height: 1.35;
+ color: var(--ink);
+ margin-bottom: 32px;
 }
 
 .manifesto-sub {
-  font-size: 13px;
-  font-weight: 300;
-  color: var(--ink-light);
-  line-height: 1.9;
-  max-width: 480px;
-  margin: 0 auto;
+ font-size: 13px;
+ font-weight: 300;
+ color: var(--ink-light);
+ line-height: 1.9;
+ max-width: 480px;
+ margin: 0 auto;
 }
 
 /* ── STRIP ── */
 .strip {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  background: var(--white);
+ display: grid;
+ grid-template-columns: 1fr 1fr 1fr 1fr;
+ border-top: 1px solid var(--border);
+ border-bottom: 1px solid var(--border);
+ background: var(--white);
 }
 
 .strip-item {
-  padding: 40px;
-  border-right: 1px solid var(--border);
-  text-align: center;
+ padding: 40px;
+ border-right: 1px solid var(--border);
+ text-align: center;
 }
 .strip-item:last-child { border-right: none; }
 
 .strip-num {
-  font-size: 36px;
-  font-weight: 200;
-  color: var(--ink);
-  display: block;
-  margin-bottom: 4px;
+ font-size: 36px;
+ font-weight: 200;
+ color: var(--ink);
+ display: block;
+ margin-bottom: 4px;
 }
 .strip-label {
-  font-size: 10px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+ font-size: 10px;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ color: var(--ink-faint);
 }
 
 /* ── NEWSLETTER ── */
 .newsletter {
-  background: var(--ink);
-  color: white;
-  padding: 100px 40px;
-  text-align: center;
+ background: var(--ink);
+ color: white;
+ padding: 100px 40px;
+ text-align: center;
 }
 
 .nl-title {
-  font-family: var(--serif);
-  font-size: clamp(32px, 5vw, 64px);
-  font-weight: 400;
-  color: white;
-  margin-bottom: 14px;
-  line-height: 1.1;
+ font-family: var(--serif);
+ font-size: clamp(32px, 5vw, 64px);
+ font-weight: 400;
+ color: white;
+ margin-bottom: 14px;
+ line-height: 1.1;
 }
 
 .nl-sub {
-  font-size: 12px;
-  font-weight: 300;
-  color: rgba(255,255,255,0.4);
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  margin-bottom: 48px;
+ font-size: 12px;
+ font-weight: 300;
+ color: rgba(255,255,255,0.4);
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ margin-bottom: 48px;
 }
 
 .nl-form {
-  display: flex;
-  max-width: 440px;
-  margin: 0 auto;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+ display: flex;
+ max-width: 440px;
+ margin: 0 auto;
+ border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
 .nl-form input {
-  flex: 1;
-  background: none;
-  border: none;
-  outline: none;
-  color: white;
-  font-size: 14px;
-  font-weight: 300;
-  padding: 12px 0;
-  font-family: var(--sans);
+ flex: 1;
+ background: none;
+ border: none;
+ outline: none;
+ color: white;
+ font-size: 14px;
+ font-weight: 300;
+ padding: 12px 0;
+ font-family: var(--sans);
 }
 .nl-form input::placeholder { color: rgba(255,255,255,0.25); }
 
 .nl-form button {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  cursor: pointer;
-  padding: 12px 0 12px 20px;
-  font-family: var(--sans);
-  transition: opacity 0.2s;
+ background: none;
+ border: none;
+ color: white;
+ font-size: 10px;
+ font-weight: 700;
+ letter-spacing: 3px;
+ text-transform: uppercase;
+ cursor: pointer;
+ padding: 12px 0 12px 20px;
+ font-family: var(--sans);
+ transition: opacity 0.2s;
 }
 .nl-form button:hover { opacity: 0.6; }
 
 /* ── FOOTER ── */
 footer {
-  background: var(--white);
-  border-top: 1px solid var(--border);
-  padding: 60px 40px 30px;
+ background: var(--white);
+ border-top: 1px solid var(--border);
+ padding: 60px 40px 30px;
 }
 
 .footer-top {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 60px;
-  padding-bottom: 60px;
-  border-bottom: 1px solid var(--border);
-  max-width: 1400px;
-  margin: 0 auto;
+ display: grid;
+ grid-template-columns: 2fr 1fr 1fr 1fr;
+ gap: 60px;
+ padding-bottom: 60px;
+ border-bottom: 1px solid var(--border);
+ max-width: 1400px;
+ margin: 0 auto;
 }
 
 .footer-brand-name {
-  font-size: 32px;
-  font-weight: 200;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  margin-bottom: 16px;
+ font-size: 32px;
+ font-weight: 200;
+ letter-spacing: 6px;
+ text-transform: uppercase;
+ margin-bottom: 16px;
 }
 .footer-tagline {
-  font-size: 12px;
-  font-weight: 300;
-  color: var(--ink-faint);
-  line-height: 1.9;
-  max-width: 220px;
+ font-size: 12px;
+ font-weight: 300;
+ color: var(--ink-faint);
+ line-height: 1.9;
+ max-width: 220px;
 }
 
 .footer-col h5 {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin-bottom: 20px;
+ font-size: 10px;
+ font-weight: 700;
+ letter-spacing: 3px;
+ text-transform: uppercase;
+ color: var(--ink-faint);
+ margin-bottom: 20px;
 }
 
 .footer-col ul { list-style: none; }
 .footer-col li { margin-bottom: 10px; }
 .footer-col a {
-  font-size: 13px;
-  font-weight: 300;
-  color: var(--ink-light);
-  transition: color 0.2s;
+ font-size: 13px;
+ font-weight: 300;
+ color: var(--ink-light);
+ transition: color 0.2s;
 }
 .footer-col a:hover { color: var(--ink); }
 
 .footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding-top: 24px;
+ max-width: 1400px;
+ margin: 0 auto;
 }
 
 .footer-copy {
-  font-size: 11px;
-  color: var(--ink-faint);
-  font-weight: 300;
+ font-size: 11px;
+ color: var(--ink-faint);
+ font-weight: 300;
 }
 
 .footer-socials { display: flex; gap: 20px; }
 .footer-socials a {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  transition: color 0.2s;
+ font-size: 11px;
+ font-weight: 500;
+ letter-spacing: 2px;
+ text-transform: uppercase;
+ color: var(--ink-faint);
+ transition: color 0.2s;
 }
 .footer-socials a:hover { color: var(--ink); }
 
 /* ── CART DRAWER ── */
 .overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-  backdrop-filter: blur(2px);
+ position: fixed; inset: 0;
+ background: rgba(0,0,0,0.4);
+ z-index: 1000;
+ opacity: 0;
+ pointer-events: none;
+ transition: opacity 0.3s;
+ backdrop-filter: blur(2px);
 }
 .overlay.show { opacity: 1; pointer-events: all; }
 
 .cart {
-  position: fixed;
-  top: 0; right: -500px;
-  width: 460px;
-  height: 100vh;
-  background: var(--off-white);
-  z-index: 1001;
-  display: flex;
-  flex-direction: column;
-  transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
-  border-left: 1px solid var(--border);
+ position: fixed;
+ top: 0; right: -500px;
+ width: 460px;
+ height: 100vh;
+ background: var(--off-white);
+ z-index: 1001;
+ display: flex;
+ flex-direction: column;
+ transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+ border-left: 1px solid var(--border);
 }
 .cart.show { right: 0; }
 
 .cart-head {
-  padding: 28px 32px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+ padding: 28px 32px;
+ border-bottom: 1px solid var(--border);
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
 }
 
 .cart-head h3 {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
+ font-size: 13px;
+ font-weight: 700;
+ letter-spacing: 3px;
+ text-transform: uppercase;
 }
 
 .cart-close {
-  background: none; border: none;
-  font-size: 22px; cursor: pointer;
-  color: var(--ink-light); line-height: 1;
-  transition: color 0.2s;
+ background: none; border: none;
+ font-size: 22px; cursor: pointer;
+ color: var(--ink-light); line-height: 1;
+ transition: color 0.2s;
 }
 .cart-close:hover { color: var(--ink); }
 
 .cart-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px 32px;
+ flex: 1;
+ overflow-y: auto;
+ padding: 24px 32px;
 }
 
 .cart-empty {
-  text-align: center;
-  padding: 80px 0;
+ text-align: center;
+ padding: 80px 0;
 }
 .cart-empty p {
-  font-size: 13px;
-  color: var(--ink-faint);
-  font-weight: 300;
-  line-height: 2;
+ font-size: 13px;
+ color: var(--ink-faint);
+ font-weight: 300;
+ line-height: 2;
 }
 
 .cart-item {
-  display: flex;
-  gap: 20px;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--border);
+ display: flex;
+ gap: 20px;
+ padding: 20px 0;
+ border-bottom: 1px solid var(--border);
 }
 
 .cart-item-img {
-  width: 88px;
-  height: 110px;
-  background: #e8e6e2;
-  overflow: hidden;
-  flex-shrink: 0;
+ width: 88px;
+ height: 110px;
+ background: #e8e6e2;
+ overflow: hidden;
+ flex-shrink: 0;
 }
 .cart-item-img img { width: 88px; height: 110px; object-fit: cover; }
 
 .ci-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
 .ci-name { font-size: 13px; font-weight: 600; }
-.ci-sub  { font-size: 11px; color: var(--ink-faint); margin-top: 3px; font-weight: 300; }
+.ci-sub { font-size: 11px; color: var(--ink-faint); margin-top: 3px; font-weight: 300; }
 .ci-price { font-size: 14px; font-weight: 700; }
 
 .ci-qty {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-top: 10px;
+ display: flex;
+ align-items: center;
+ gap: 14px;
+ margin-top: 10px;
 }
 .ci-qty button {
-  background: none; border: 1px solid var(--border);
-  width: 28px; height: 28px;
-  font-size: 14px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s; color: var(--ink);
+ background: none; border: 1px solid var(--border);
+ width: 28px; height: 28px;
+ font-size: 14px; cursor: pointer;
+ display: flex; align-items: center; justify-content: center;
+ transition: all 0.2s; color: var(--ink);
 }
 .ci-qty button:hover { border-color: var(--ink); }
 .ci-qty span { font-size: 13px; font-weight: 600; min-width: 18px; text-align: center; }
 
 .cart-foot {
-  padding: 24px 32px 32px;
-  border-top: 1px solid var(--border);
+ padding: 24px 32px 32px;
+ border-top: 1px solid var(--border);
 }
 
 .cart-summary {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 6px;
+ display: flex;
+ justify-content: space-between;
+ align-items: baseline;
+ margin-bottom: 6px;
 }
 .cart-summary .lbl { font-size: 12px; font-weight: 500; letter-spacing: 1px; color: var(--ink-light); text-transform: uppercase; }
 .cart-summary .val { font-size: 22px; font-weight: 200; }
@@ -912,58 +921,58 @@ footer {
 .cart-shipping-note { font-size: 11px; color: var(--ink-faint); margin-bottom: 24px; font-weight: 300; }
 
 .checkout-btn {
-  display: block; width: 100%;
-  background: var(--ink); color: white;
-  border: none; padding: 18px;
-  font-size: 10px; font-weight: 700;
-  letter-spacing: 3px; text-transform: uppercase;
-  cursor: pointer; transition: all 0.2s;
-  font-family: var(--sans); margin-bottom: 10px;
+ display: block; width: 100%;
+ background: var(--ink); color: white;
+ border: none; padding: 18px;
+ font-size: 10px; font-weight: 700;
+ letter-spacing: 3px; text-transform: uppercase;
+ cursor: pointer; transition: all 0.2s;
+ font-family: var(--sans); margin-bottom: 10px;
 }
 .checkout-btn:hover { background: #222; }
 
 .keep-shopping {
-  display: block; width: 100%;
-  background: transparent; color: var(--ink-light);
-  border: 1px solid var(--border); padding: 14px;
-  font-size: 10px; font-weight: 500;
-  letter-spacing: 2px; text-transform: uppercase;
-  cursor: pointer; transition: all 0.2s;
-  font-family: var(--sans);
+ display: block; width: 100%;
+ background: transparent; color: var(--ink-light);
+ border: 1px solid var(--border); padding: 14px;
+ font-size: 10px; font-weight: 500;
+ letter-spacing: 2px; text-transform: uppercase;
+ cursor: pointer; transition: all 0.2s;
+ font-family: var(--sans);
 }
 .keep-shopping:hover { border-color: var(--ink); color: var(--ink); }
 
 /* ── REVEAL ── */
 .reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+ opacity: 0;
+ transform: translateY(24px);
+ transition: opacity 0.8s ease, transform 0.8s ease;
 }
 .reveal.on { opacity: 1; transform: none; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 1024px) {
-  .products-grid { grid-template-columns: repeat(2, 1fr); }
-  .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+ .products-grid { grid-template-columns: repeat(2, 1fr); }
+ .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
 }
 
 @media (max-width: 768px) {
-  nav { padding: 0 20px; }
-  .nav-links { display: none; }
-  .hero { grid-template-columns: 1fr; min-height: auto; }
-  .hero-img { height: 55vw; min-height: 300px; }
-  .hero-img-overlay { background: linear-gradient(to bottom, transparent 60%, var(--off-white)); }
-  .hero-content { padding: 40px 24px 60px; }
-  .editorial { grid-template-columns: 1fr; }
-  .editorial-content { padding: 60px 32px; }
-  .lookbook { grid-template-columns: 1fr 1fr; }
-  .lookbook .look-item:first-child { grid-column: span 2; grid-row: span 1; }
-  .lookbook .look-item:first-child .look-img { height: 400px; }
-  .strip { grid-template-columns: 1fr 1fr; }
-  .collection { padding: 60px 20px; }
-  .footer-top { grid-template-columns: 1fr 1fr; }
-  .cart { width: 100%; right: -100%; }
-  .products-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
+ nav { padding: 0 20px; }
+ .nav-links { display: none; }
+ .hero { grid-template-columns: 1fr; min-height: auto; }
+ .hero-img { height: 55vw; min-height: 300px; }
+ .hero-img-overlay { background: linear-gradient(to bottom, transparent 60%, var(--off-white)); }
+ .hero-content { padding: 40px 24px 60px; }
+ .editorial { grid-template-columns: 1fr; }
+ .editorial-content { padding: 60px 32px; }
+ .lookbook { grid-template-columns: 1fr 1fr; }
+ .lookbook .look-item:first-child { grid-column: span 2; grid-row: span 1; }
+ .lookbook .look-item:first-child .look-img { height: 400px; }
+ .strip { grid-template-columns: 1fr 1fr; }
+ .collection { padding: 60px 20px; }
+ .footer-top { grid-template-columns: 1fr 1fr; }
+ .cart { width: 100%; right: -100%; }
+ .products-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
 }
 </style>
 </head>
@@ -971,354 +980,337 @@ footer {
 
 <!-- ── NAV ── -->
 <nav>
-  <div class="nav-logo">PB</div>
-  <ul class="nav-links">
-    <li><a href="#collection">Shop</a></li>
-    <li><a href="#drop">New Drop</a></li>
-    <li><a href="#lookbook">Lookbook</a></li>
-    <li><a href="#about">About</a></li>
-  </ul>
-  <div class="nav-actions">
-    <a href="#collection">Shop</a>
-    <button class="cart-trigger" onclick="toggleCart()">
-      Bag (<span id="cart-count">0</span>)
-      <span class="cart-badge" id="badge"></span>
-    </button>
-  </div>
+ <div class="nav-logo">Deji</div>
+ <ul class="nav-links">
+ <li><a href="#collection">Shop</a></li>
+ <li><a href="#drop">New Drop</a></li>
+ <li><a href="#lookbook">Lookbook</a></li>
+ <li><a href="#about">About</a></li>
+ </ul>
+ <div class="nav-actions">
+ <a href="#collection">Shop</a>
+ <button class="cart-trigger" onclick="toggleCart()">
+ Bag (<span id="cart-count">0</span>)
+ <span class="cart-badge" id="badge"></span>
+ </button>
+ </div>
 </nav>
 
 <!-- ── HERO ── -->
 <section class="hero">
-  <div class="hero-img">
-    <img
-      src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=1200&q=85&fit=crop&crop=top"
-      alt="PB SS26"
-      loading="eager"
-    >
-    <div class="hero-img-overlay"></div>
-  </div>
-  <div class="hero-content">
-    <div class="hero-season">SS26 — Drop 001</div>
-    <h1 class="hero-title">
-      Drop<br><strong>Culture.</strong><br>Street<br>Code.
-    </h1>
-    <p class="hero-subtitle">
-      Heavyweight fleece. Oversized silhouettes. Limited units. No restocks. Ships worldwide.
-    </p>
-    <div>
-      <button class="btn-ink" onclick="scrollTo('#collection')">Shop the Drop</button>
-      <button class="btn-outline" onclick="scrollTo('#drop')">View Lookbook</button>
-    </div>
-    <div class="hero-scroll">Scroll</div>
-  </div>
+ <div class="hero-img">
+ <img
+ src="assets/HDY-PNT-BLK.svg"
+ alt="Deji Drop 1 — Pullover + Extra-Wide"
+ loading="eager"
+ >
+ <div class="hero-img-overlay"></div>
+ </div>
+ <div class="hero-content">
+ <div class="hero-season">Drop 1</div>
+ <h1 class="hero-title">
+ Drop 1<br><strong>Pullover</strong><br>+ Extra-<br>Wide.
+ </h1>
+ <p class="hero-subtitle">
+ 420 GSM 80/20 brushed fleece. Oversized pullover with PB left chest. Extra-wide pants, clean — no logo. Limited run.
+ </p>
+ <div>
+ <button class="btn-ink" onclick="scrollTo('#collection')">Shop the Drop</button>
+ <button class="btn-outline" onclick="scrollTo('#lookbook')">View Lookbook</button>
+ </div>
+ <div class="hero-scroll">Scroll</div>
+ </div>
 </section>
 
 <!-- ── TICKER ── -->
 <div class="ticker">
-  <div class="ticker-track">
-    <span class="ticker-item"><b>PB Brand</b> — SS26</span>
-    <span class="ticker-item">Free Shipping Over $100</span>
-    <span class="ticker-item"><b>New Drop</b> — Limited Units</span>
-    <span class="ticker-item">Print on Demand · Ships in 5–8 Days</span>
-    <span class="ticker-item"><b>PB Brand</b> — SS26</span>
-    <span class="ticker-item">Free Shipping Over $100</span>
-    <span class="ticker-item"><b>New Drop</b> — Limited Units</span>
-    <span class="ticker-item">Print on Demand · Ships in 5–8 Days</span>
-    <span class="ticker-item"><b>PB Brand</b> — SS26</span>
-    <span class="ticker-item">Free Shipping Over $100</span>
-    <span class="ticker-item"><b>New Drop</b> — Limited Units</span>
-    <span class="ticker-item">Print on Demand · Ships in 5–8 Days</span>
-  </div>
+ <div class="ticker-track">
+ <span class="ticker-item"><b>Deji</b> — Drop 1</span>
+ <span class="ticker-item">420 GSM Brushed Fleece</span>
+ <span class="ticker-item"><b>HDY-001</b> + <b>PNT-001</b></span>
+ <span class="ticker-item">BLK · HGR · BON</span>
+ <span class="ticker-item"><b>Deji</b> — Drop 1</span>
+ <span class="ticker-item">420 GSM Brushed Fleece</span>
+ <span class="ticker-item"><b>HDY-001</b> + <b>PNT-001</b></span>
+ <span class="ticker-item">BLK · HGR · BON</span>
+ <span class="ticker-item"><b>Deji</b> — Drop 1</span>
+ <span class="ticker-item">420 GSM Brushed Fleece</span>
+ <span class="ticker-item"><b>HDY-001</b> + <b>PNT-001</b></span>
+ <span class="ticker-item">BLK · HGR · BON</span>
+ </div>
 </div>
 
 <!-- ── COLLECTION ── -->
 <section class="collection reveal" id="collection">
-  <div class="collection-head">
-    <div>
-      <div class="label">SS26 Collection</div>
-      <h2 class="collection-title">The <span>Drop</span></h2>
-    </div>
-    <div class="filter-row">
-      <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
-      <button class="filter-btn" onclick="filterProducts('hoodies', this)">Hoodies</button>
-      <button class="filter-btn" onclick="filterProducts('pants', this)">Pants</button>
-    </div>
-  </div>
+ <div class="collection-head">
+ <div>
+ <div class="label">Drop 1 Collection</div>
+ <h2 class="collection-title">The <span>Drop</span></h2>
+ </div>
+ <div class="filter-row">
+ <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
+ <button class="filter-btn" onclick="filterProducts('hoodies', this)">Pullover</button>
+ <button class="filter-btn" onclick="filterProducts('pants', this)">Pants</button>
+ <button class="filter-btn" onclick="filterProducts('set', this)">Set</button>
+ </div>
+ </div>
 
-  <div class="products-grid" id="products-grid">
+ <div class="products-grid" id="products-grid">
 
-    <!-- Product 1 -->
-    <div class="product-card" data-cat="hoodies">
-      <div class="product-img">
-        <div class="product-tag">New</div>
-        <img
-          src="https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600&q=80&fit=crop&crop=top"
-          alt="PB Core Hoodie — Onyx Black"
-          loading="lazy"
-        >
-        <button class="quick-add" onclick="addToCart(1,'PB Core Hoodie',75,'Onyx Black',this)">Quick Add — $75</button>
-      </div>
-      <div class="product-info">
-        <div class="product-name">PB Core Hoodie</div>
-        <div class="product-detail">
-          <div class="product-color-row">
-            <div class="color-swatch" style="background:#1a1a1a;" title="Onyx Black"></div>
-            <div class="color-swatch" style="background:#f0ede8;" title="Glacier White"></div>
-          </div>
-          <div class="product-price">$75</div>
-        </div>
-        <div class="size-row">
-          <button class="size-pill" onclick="pickSize(this)">S</button>
-          <button class="size-pill sel" onclick="pickSize(this)">M</button>
-          <button class="size-pill" onclick="pickSize(this)">L</button>
-          <button class="size-pill" onclick="pickSize(this)">XL</button>
-          <button class="size-pill" onclick="pickSize(this)">XXL</button>
-        </div>
-      </div>
-    </div>
+ <!-- HDY-001 Pullover -->
+ <div class="product-card" data-cat="hoodies" data-product="hdy" data-color="BLK">
+ <div class="product-img">
+ <div class="product-tag">New</div>
+ <img
+ id="img-hdy"
+ src="assets/HDY-PNT-BLK.svg"
+ alt="HDY-001 Pullover — Black"
+ loading="lazy"
+ >
+ <button class="quick-add" onclick="quickAdd('hdy', this)">Quick Add — $98</button>
+ </div>
+ <div class="product-info">
+ <div class="product-name">HDY-001 Pullover</div>
+ <div class="product-meta">420 GSM 80/20 brushed fleece · oversized · kangaroo pocket · PB left chest</div>
+ <div class="product-detail">
+ <div class="product-color-row">
+ <div class="color-swatch active" style="background:#1a1a1a;" title="Black (BLK)" onclick="setColor(this,'hdy','BLK')"></div>
+ <div class="color-swatch" style="background:#9a9a9a;" title="Heather Grey (HGR)" onclick="setColor(this,'hdy','HGR')"></div>
+ <div class="color-swatch" style="background:#e8e2d6; outline:1px solid #ccc;" title="Bone (BON)" onclick="setColor(this,'hdy','BON')"></div>
+ </div>
+ <div class="product-price">$98</div>
+ </div>
+ <div class="size-row">
+ <button class="size-pill" onclick="pickSize(this)">S</button>
+ <button class="size-pill sel" onclick="pickSize(this)">M</button>
+ <button class="size-pill" onclick="pickSize(this)">L</button>
+ <button class="size-pill" onclick="pickSize(this)">XL</button>
+ <button class="size-pill" onclick="pickSize(this)">2XL</button>
+ </div>
+ </div>
+ </div>
 
-    <!-- Product 2 -->
-    <div class="product-card" data-cat="hoodies">
-      <div class="product-img">
-        <div class="product-tag">Drop 01</div>
-        <img
-          src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&q=80&fit=crop&crop=top"
-          alt="PB Core Hoodie — Glacier White"
-          loading="lazy"
-        >
-        <button class="quick-add" onclick="addToCart(2,'PB Core Hoodie',75,'Glacier White',this)">Quick Add — $75</button>
-      </div>
-      <div class="product-info">
-        <div class="product-name">PB Core Hoodie</div>
-        <div class="product-detail">
-          <div class="product-color-row">
-            <div class="color-swatch" style="background:#f0ede8; outline:1px solid #ccc;" title="Glacier White"></div>
-            <div class="color-swatch" style="background:#1a1a1a;" title="Onyx Black"></div>
-          </div>
-          <div class="product-price">$75</div>
-        </div>
-        <div class="size-row">
-          <button class="size-pill" onclick="pickSize(this)">S</button>
-          <button class="size-pill" onclick="pickSize(this)">M</button>
-          <button class="size-pill sel" onclick="pickSize(this)">L</button>
-          <button class="size-pill" onclick="pickSize(this)">XL</button>
-        </div>
-      </div>
-    </div>
+ <!-- PNT-001 Extra-Wide Pants -->
+ <div class="product-card" data-cat="pants" data-product="pnt" data-color="BLK">
+ <div class="product-img">
+ <div class="product-tag">New</div>
+ <img
+ id="img-pnt"
+ src="assets/HDY-PNT-BLK.svg"
+ alt="PNT-001 Extra-Wide Pants — Black"
+ loading="lazy"
+ >
+ <button class="quick-add" onclick="quickAdd('pnt', this)">Quick Add — $94</button>
+ </div>
+ <div class="product-info">
+ <div class="product-name">PNT-001 Extra-Wide Pants</div>
+ <div class="product-meta">Same 420 GSM fleece · extra-wide pooling · no logo on pants</div>
+ <div class="product-detail">
+ <div class="product-color-row">
+ <div class="color-swatch active" style="background:#1a1a1a;" title="Black (BLK)" onclick="setColor(this,'pnt','BLK')"></div>
+ <div class="color-swatch" style="background:#9a9a9a;" title="Heather Grey (HGR)" onclick="setColor(this,'pnt','HGR')"></div>
+ <div class="color-swatch" style="background:#e8e2d6; outline:1px solid #ccc;" title="Bone (BON)" onclick="setColor(this,'pnt','BON')"></div>
+ </div>
+ <div class="product-price">$94</div>
+ </div>
+ <div class="size-row">
+ <button class="size-pill" onclick="pickSize(this)">S</button>
+ <button class="size-pill sel" onclick="pickSize(this)">M</button>
+ <button class="size-pill" onclick="pickSize(this)">L</button>
+ <button class="size-pill" onclick="pickSize(this)">XL</button>
+ <button class="size-pill" onclick="pickSize(this)">2XL</button>
+ </div>
+ </div>
+ </div>
 
-    <!-- Product 3 -->
-    <div class="product-card" data-cat="pants">
-      <div class="product-img">
-        <div class="product-tag">New</div>
-        <img
-          src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80&fit=crop&crop=center"
-          alt="PB Track Pants"
-          loading="lazy"
-        >
-        <button class="quick-add" onclick="addToCart(3,'PB Track Pants',65,'Onyx Black',this)">Quick Add — $65</button>
-      </div>
-      <div class="product-info">
-        <div class="product-name">PB Track Pants</div>
-        <div class="product-detail">
-          <div class="product-color-row">
-            <div class="color-swatch" style="background:#1a1a1a;" title="Onyx Black"></div>
-            <div class="color-swatch" style="background:#444;" title="Ash Grey"></div>
-          </div>
-          <div class="product-price">$65</div>
-        </div>
-        <div class="size-row">
-          <button class="size-pill" onclick="pickSize(this)">XS</button>
-          <button class="size-pill" onclick="pickSize(this)">S</button>
-          <button class="size-pill sel" onclick="pickSize(this)">M</button>
-          <button class="size-pill" onclick="pickSize(this)">L</button>
-          <button class="size-pill" onclick="pickSize(this)">XL</button>
-        </div>
-      </div>
-    </div>
+ <!-- Drop 1 Set -->
+ <div class="product-card" data-cat="set hoodies pants" data-product="set" data-color="BLK">
+ <div class="product-img">
+ <div class="product-tag">Set</div>
+ <img
+ id="img-set"
+ src="assets/HDY-PNT-BLK.svg"
+ alt="Drop 1 Set — Black"
+ loading="lazy"
+ >
+ <button class="quick-add" onclick="quickAdd('set', this)">Quick Add — $192</button>
+ </div>
+ <div class="product-info">
+ <div class="product-name">Drop 1 Set</div>
+ <div class="product-meta">Pullover + Extra-Wide Pants · matched color &amp; size</div>
+ <div class="product-detail">
+ <div class="product-color-row">
+ <div class="color-swatch active" style="background:#1a1a1a;" title="Black (BLK)" onclick="setColor(this,'set','BLK')"></div>
+ <div class="color-swatch" style="background:#9a9a9a;" title="Heather Grey (HGR)" onclick="setColor(this,'set','HGR')"></div>
+ <div class="color-swatch" style="background:#e8e2d6; outline:1px solid #ccc;" title="Bone (BON)" onclick="setColor(this,'set','BON')"></div>
+ </div>
+ <div class="product-price">$192</div>
+ </div>
+ <div class="size-row">
+ <button class="size-pill" onclick="pickSize(this)">S</button>
+ <button class="size-pill sel" onclick="pickSize(this)">M</button>
+ <button class="size-pill" onclick="pickSize(this)">L</button>
+ <button class="size-pill" onclick="pickSize(this)">XL</button>
+ <button class="size-pill" onclick="pickSize(this)">2XL</button>
+ </div>
+ </div>
+ </div>
 
-    <!-- Product 4 Bundle -->
-    <div class="product-card" data-cat="hoodies pants">
-      <div class="product-img">
-        <div class="product-tag">Bundle</div>
-        <img
-          src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80&fit=crop&crop=top"
-          alt="PB Full Set"
-          loading="lazy"
-        >
-        <button class="quick-add" onclick="addToCart(4,'PB Full Set Bundle',120,'Onyx Black',this)">Quick Add — $120</button>
-      </div>
-      <div class="product-info">
-        <div class="product-name">PB Full Set Bundle</div>
-        <div class="product-detail">
-          <div class="product-color-row">
-            <div class="color-swatch" style="background:#1a1a1a;"></div>
-          </div>
-          <div class="product-price"><s>$140</s> $120</div>
-        </div>
-        <div class="size-row">
-          <button class="size-pill" onclick="pickSize(this)">S/S</button>
-          <button class="size-pill sel" onclick="pickSize(this)">M/M</button>
-          <button class="size-pill" onclick="pickSize(this)">L/L</button>
-          <button class="size-pill" onclick="pickSize(this)">XL/XL</button>
-        </div>
-      </div>
-    </div>
-
-  </div>
+ </div>
 </section>
 
 <!-- ── EDITORIAL FEATURE ── -->
 <div class="editorial reveal" id="drop">
-  <div class="editorial-img">
-    <img
-      src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=1200&q=85&fit=crop&crop=top"
-      alt="PB Core Hoodie — Featured"
-      loading="lazy"
-    >
-  </div>
-  <div class="editorial-content">
-    <div class="ed-label">★ Featured — SS26 Hero Piece</div>
-    <h2 class="ed-title">The Hoodie<br>That Started<br>Everything.</h2>
-    <p class="ed-desc">
-      550gsm heavyweight French terry. Dropped shoulder. Chest-printed PB graphic. Made for those who move quiet and still get noticed.
-    </p>
-    <div class="ed-price-row">
-      <div class="ed-price">$75</div>
-      <div class="ed-price-note">Free shipping on orders over $100</div>
-    </div>
-    <button class="btn-white" onclick="addToCart(1,'PB Core Hoodie',75,'Onyx Black')">Add to Bag</button>
-  </div>
+ <div class="editorial-img">
+ <img
+ src="assets/HDY-PNT-HGR.svg"
+ alt="HDY-001 Pullover — Featured"
+ loading="lazy"
+ >
+ </div>
+ <div class="editorial-content">
+ <div class="ed-label">★ Featured — Drop 1 Hero</div>
+ <h2 class="ed-title">The Pullover<br>That Sets<br>the Tone.</h2>
+ <p class="ed-desc">
+ 420 GSM 80/20 brushed fleece. Oversized fit, kangaroo pocket, PB geometric monogram left chest. Built quiet. Worn loud.
+ </p>
+ <div class="ed-price-row">
+ <div class="ed-price">$98</div>
+ <div class="ed-price-note">Set with Extra-Wide — $192</div>
+ </div>
+ <button class="btn-white" onclick="quickAdd('hdy')">Shop Pullover</button>
+ </div>
 </div>
 
 <!-- ── LOOKBOOK ── -->
 <div class="lookbook" id="lookbook">
-  <div class="look-item">
-    <div class="look-img">
-      <img
-        src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=900&q=80&fit=crop&crop=top"
-        alt="PB Lookbook"
-        loading="lazy"
-      >
-    </div>
-    <div class="look-caption">
-      <div class="look-name">PB Core Hoodie</div>
-      <div class="look-price">$75</div>
-    </div>
-  </div>
-  <div class="look-item">
-    <div class="look-img">
-      <img
-        src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=700&q=80&fit=crop&crop=top"
-        alt="PB Lookbook 2"
-        loading="lazy"
-      >
-    </div>
-    <div class="look-caption">
-      <div class="look-name">Full Set</div>
-      <div class="look-price">$120</div>
-    </div>
-  </div>
-  <div class="look-item">
-    <div class="look-img">
-      <img
-        src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=700&q=80&fit=crop&crop=top"
-        alt="PB Lookbook 3"
-        loading="lazy"
-      >
-    </div>
-    <div class="look-caption">
-      <div class="look-name">Track Pants</div>
-      <div class="look-price">$65</div>
-    </div>
-  </div>
+ <div class="look-item">
+ <div class="look-img">
+ <img
+ src="assets/HDY-PNT-BLK.svg"
+ alt="Deji Drop 1 — Black"
+ loading="lazy"
+ >
+ </div>
+ <div class="look-caption">
+ <div class="look-name">Drop 1 Set — BLK</div>
+ <div class="look-price">$192</div>
+ </div>
+ </div>
+ <div class="look-item">
+ <div class="look-img">
+ <img
+ src="assets/HDY-PNT-HGR.svg"
+ alt="Deji Drop 1 — Heather Grey"
+ loading="lazy"
+ >
+ </div>
+ <div class="look-caption">
+ <div class="look-name">Set — HGR</div>
+ <div class="look-price">$192</div>
+ </div>
+ </div>
+ <div class="look-item">
+ <div class="look-img">
+ <img
+ src="assets/HDY-PNT-BON.svg"
+ alt="Deji Drop 1 — Bone"
+ loading="lazy"
+ >
+ </div>
+ <div class="look-caption">
+ <div class="look-name">Set — BON</div>
+ <div class="look-price">$192</div>
+ </div>
+ </div>
 </div>
 
 <!-- ── MANIFESTO ── -->
 <section class="manifesto reveal" id="about">
-  <div class="label" style="margin-bottom:40px;">About PB</div>
-  <p class="manifesto-body">
-    "Not made for everyone. Built for the ones who already know."
-  </p>
-  <p class="manifesto-sub">
-    PB is a streetwear brand built on drop culture. Every piece is limited. Every drop is a statement. No inventory. No compromise. Just product.
-  </p>
+ <div class="label" style="margin-bottom:40px;">About Deji</div>
+ <p class="manifesto-body">
+ "Not made for everyone. Built for the ones who already know."
+ </p>
+ <p class="manifesto-sub">
+ Deji is a streetwear house. PB is the chest monogram — not the brand rename. Drop 1 is limited fleece: pullover + extra-wide, three colors, no filler.
+ </p>
 </section>
 
 <!-- ── STRIP ── -->
 <div class="strip reveal">
-  <div class="strip-item">
-    <span class="strip-num">5–8</span>
-    <span class="strip-label">Day Shipping</span>
-  </div>
-  <div class="strip-item">
-    <span class="strip-num">100+</span>
-    <span class="strip-label">Countries</span>
-  </div>
-  <div class="strip-item">
-    <span class="strip-num">0</span>
-    <span class="strip-label">Inventory Risk</span>
-  </div>
-  <div class="strip-item">
-    <span class="strip-num">∞</span>
-    <span class="strip-label">Limited Units</span>
-  </div>
+ <div class="strip-item">
+ <span class="strip-num">420</span>
+ <span class="strip-label">GSM Fleece</span>
+ </div>
+ <div class="strip-item">
+ <span class="strip-num">3</span>
+ <span class="strip-label">Colorways</span>
+ </div>
+ <div class="strip-item">
+ <span class="strip-num">2</span>
+ <span class="strip-label">Core Pieces</span>
+ </div>
+ <div class="strip-item">
+ <span class="strip-num">∞</span>
+ <span class="strip-label">Limited Units</span>
+ </div>
 </div>
 
 <!-- ── NEWSLETTER ── -->
 <div class="newsletter reveal">
-  <h2 class="nl-title">Get Early Access<br>to Every Drop.</h2>
-  <p class="nl-sub">No spam. One email per drop. Unsubscribe anytime.</p>
-  <div class="nl-form">
-    <input type="email" id="nl-email" placeholder="Enter your email">
-    <button onclick="subscribe()">Subscribe →</button>
-  </div>
+ <h2 class="nl-title">Get Early Access<br>to Every Drop.</h2>
+ <p class="nl-sub">No spam. One email per drop. Unsubscribe anytime.</p>
+ <div class="nl-form">
+ <input type="email" id="nl-email" placeholder="Enter your email">
+ <button onclick="subscribe()">Subscribe →</button>
+ </div>
 </div>
 
 <!-- ── FOOTER ── -->
 <footer>
-  <div class="footer-top">
-    <div>
-      <div class="footer-brand-name">PB</div>
-      <p class="footer-tagline">Streetwear built different. Every piece is limited. Ships worldwide via Printful.</p>
-    </div>
-    <div class="footer-col">
-      <h5>Shop</h5>
-      <ul>
-        <li><a href="#collection">All Products</a></li>
-        <li><a href="#drop">New Drop</a></li>
-        <li><a href="#collection">Hoodies</a></li>
-        <li><a href="#collection">Sweatpants</a></li>
-        <li><a href="#collection">Bundles</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h5>Help</h5>
-      <ul>
-        <li><a href="#">Shipping Info</a></li>
-        <li><a href="#">Returns</a></li>
-        <li><a href="#">Size Guide</a></li>
-        <li><a href="#">FAQ</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h5>Brand</h5>
-      <ul>
-        <li><a href="#about">About PB</a></li>
-        <li><a href="#lookbook">Lookbook</a></li>
-        <li><a href="#">Collabs</a></li>
-        <li><a href="#">Press</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span class="footer-copy">© 2026 PB Brand. All rights reserved.</span>
-    <div class="footer-socials">
-      <a href="#">Instagram</a>
-      <a href="#">TikTok</a>
-      <a href="#">X</a>
-    </div>
-  </div>
+ <div class="footer-top">
+ <div>
+ <div class="footer-brand-name">Deji</div>
+ <p class="footer-tagline">Streetwear built different. PB monogram on chest. Limited drops. Self-fulfilled from Ottawa.</p>
+ </div>
+ <div class="footer-col">
+ <h5>Shop</h5>
+ <ul>
+ <li><a href="#collection">All Products</a></li>
+ <li><a href="#drop">New Drop</a></li>
+ <li><a href="#collection">Pullover</a></li>
+ <li><a href="#collection">Extra-Wide Pants</a></li>
+ <li><a href="#collection">Drop 1 Set</a></li>
+ </ul>
+ </div>
+ <div class="footer-col">
+ <h5>Help</h5>
+ <ul>
+ <li><a href="#">Shipping Info</a></li>
+ <li><a href="#">Returns</a></li>
+ <li><a href="#">Size Guide</a></li>
+ <li><a href="#">FAQ</a></li>
+ <li><a href="#">Contact</a></li>
+ </ul>
+ </div>
+ <div class="footer-col">
+ <h5>Brand</h5>
+ <ul>
+ <li><a href="#about">About Deji</a></li>
+ <li><a href="#lookbook">Lookbook</a></li>
+ <li><a href="#">Collabs</a></li>
+ <li><a href="#">Press</a></li>
+ </ul>
+ </div>
+ </div>
+ <div class="footer-bottom">
+ <span class="footer-copy">© 2026 Deji. All rights reserved. PB is a chest monogram.</span>
+ <div class="footer-socials">
+ <a href="#">Instagram</a>
+ <a href="#">TikTok</a>
+ <a href="#">X</a>
+ </div>
+ </div>
 </footer>
 
 <!-- ── OVERLAY ── -->
@@ -1326,156 +1318,239 @@ footer {
 
 <!-- ── CART ── -->
 <div class="cart" id="cart">
-  <div class="cart-head">
-    <h3>Your Bag</h3>
-    <button class="cart-close" onclick="closeCart()">×</button>
-  </div>
-  <div class="cart-body" id="cart-body">
-    <div class="cart-empty">
-      <p>Your bag is empty.<br>Add something worth wearing.</p>
-    </div>
-  </div>
-  <div class="cart-foot" id="cart-foot" style="display:none">
-    <div class="cart-summary">
-      <span class="lbl">Subtotal</span>
-      <span class="val" id="cart-total">$0</span>
-    </div>
-    <p class="cart-shipping-note" id="ship-note">Shipping calculated at checkout</p>
-    <button class="checkout-btn" onclick="goCheckout()">Checkout →</button>
-    <button class="keep-shopping" onclick="closeCart()">Continue Shopping</button>
-  </div>
+ <div class="cart-head">
+ <h3>Your Bag</h3>
+ <button class="cart-close" onclick="closeCart()">×</button>
+ </div>
+ <div class="cart-body" id="cart-body">
+ <div class="cart-empty">
+ <p>Your bag is empty.<br>Add something worth wearing.</p>
+ </div>
+ </div>
+ <div class="cart-foot" id="cart-foot" style="display:none">
+ <div class="cart-summary">
+ <span class="lbl">Subtotal</span>
+ <span class="val" id="cart-total">$0</span>
+ </div>
+ <p class="cart-shipping-note" id="ship-note">Shipping calculated at checkout</p>
+ <button class="checkout-btn" onclick="goCheckout()">Checkout →</button>
+ <button class="keep-shopping" onclick="closeCart()">Continue Shopping</button>
+ </div>
 </div>
 
 <script>
 // ── DATA ──────────────────────────────────────────────────────────
-const productImages = {
-  1: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=200&q=70&fit=crop&crop=top',
-  2: 'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=200&q=70&fit=crop&crop=top',
-  3: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200&q=70&fit=crop',
-  4: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=200&q=70&fit=crop&crop=top',
+const SHOP = 'https://9z9z0b-ic.myshopify.com';
+const PRODUCTS = {
+ hdy: {
+ id: 'hdy',
+ name: 'HDY-001 Pullover',
+ price: 98,
+ url: SHOP + '/products/hdy-001-pullover',
+ images: {
+ BLK: 'assets/HDY-PNT-BLK.svg',
+ HGR: 'assets/HDY-PNT-HGR.svg',
+ BON: 'assets/HDY-PNT-BON.svg'
+ }
+ },
+ pnt: {
+ id: 'pnt',
+ name: 'PNT-001 Extra-Wide Pants',
+ price: 94,
+ url: SHOP + '/products/pnt-001-extra-wide',
+ images: {
+ BLK: 'assets/HDY-PNT-BLK.svg',
+ HGR: 'assets/HDY-PNT-HGR.svg',
+ BON: 'assets/HDY-PNT-BON.svg'
+ }
+ },
+ set: {
+ id: 'set',
+ name: 'Drop 1 Set',
+ price: 192,
+ url: SHOP + '/products/drop1-set',
+ images: {
+ BLK: 'assets/HDY-PNT-BLK.svg',
+ HGR: 'assets/HDY-PNT-HGR.svg',
+ BON: 'assets/HDY-PNT-BON.svg'
+ }
+ }
 };
+const COLOR_LABELS = { BLK: 'Black (BLK)', HGR: 'Heather Grey (HGR)', BON: 'Bone (BON)' };
 
 let cart = [];
+let lastCheckoutUrl = PRODUCTS.hdy.url;
 
-// ── CART LOGIC ────────────────────────────────────────────────────
-function addToCart(id, name, price, color, btn) {
-  const ex = cart.find(i => i.id === id);
-  if (ex) ex.qty++;
-  else cart.push({ id, name, price, color, qty: 1 });
-
-  renderCart();
-  openCart();
-
-  if (btn) {
-    const orig = btn.textContent;
-    btn.textContent = 'Added ✓';
-    btn.style.background = '#222';
-    setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1600);
-  }
+function selectedSize(card) {
+ const sel = card.querySelector('.size-pill.sel');
+ return sel ? sel.textContent.trim() : 'M';
 }
 
-function changeQty(id, d) {
-  const i = cart.findIndex(x => x.id === id);
-  if (i < 0) return;
-  cart[i].qty += d;
-  if (cart[i].qty <= 0) cart.splice(i, 1);
-  renderCart();
+function selectedColor(card) {
+ return card.dataset.color || 'BLK';
+}
+
+function setColor(el, key, color) {
+ const card = el.closest('.product-card');
+ card.dataset.color = color;
+ card.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+ el.classList.add('active');
+ const img = document.getElementById('img-' + key);
+ if (img && PRODUCTS[key]) {
+ img.src = PRODUCTS[key].images[color];
+ img.alt = PRODUCTS[key].name + ' — ' + COLOR_LABELS[color];
+ }
+}
+
+function quickAdd(key, btn) {
+ const p = PRODUCTS[key];
+ if (!p) return;
+ const card = btn
+ ? btn.closest('.product-card')
+ : document.querySelector('.product-card[data-product="' + key + '"]');
+ const color = card ? selectedColor(card) : 'BLK';
+ const size = card ? selectedSize(card) : 'M';
+ const lineId = key + '-' + color + '-' + size;
+
+ const ex = cart.find(i => i.lineId === lineId);
+ if (ex) ex.qty++;
+ else cart.push({
+ lineId,
+ id: key,
+ name: p.name,
+ price: p.price,
+ color: COLOR_LABELS[color] || color,
+ size,
+ qty: 1,
+ img: p.images[color],
+ url: p.url
+ });
+
+ lastCheckoutUrl = p.url;
+ renderCart();
+ openCart();
+
+ if (btn) {
+ const orig = btn.textContent;
+ btn.textContent = 'Added ✓';
+ btn.style.background = '#222';
+ setTimeout(() => {
+ btn.textContent = orig;
+ btn.style.background = '';
+ // Navigate to Shopify product (simplest wiring; variant IDs unknown)
+ window.location.href = p.url;
+ }, 700);
+ } else {
+ window.location.href = p.url;
+ }
+}
+
+function changeQty(lineId, d) {
+ const i = cart.findIndex(x => x.lineId === lineId);
+ if (i < 0) return;
+ cart[i].qty += d;
+ if (cart[i].qty <= 0) cart.splice(i, 1);
+ if (cart.length) lastCheckoutUrl = cart[cart.length - 1].url;
+ renderCart();
 }
 
 function renderCart() {
-  const count = cart.reduce((s, i) => s + i.qty, 0);
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+ const count = cart.reduce((s, i) => s + i.qty, 0);
+ const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
-  document.getElementById('cart-count').textContent = count;
+ document.getElementById('cart-count').textContent = count;
 
-  const body = document.getElementById('cart-body');
-  const foot = document.getElementById('cart-foot');
-  const totalEl = document.getElementById('cart-total');
-  const shipEl  = document.getElementById('ship-note');
+ const body = document.getElementById('cart-body');
+ const foot = document.getElementById('cart-foot');
+ const totalEl = document.getElementById('cart-total');
+ const shipEl = document.getElementById('ship-note');
 
-  if (!cart.length) {
-    body.innerHTML = '<div class="cart-empty"><p>Your bag is empty.<br>Add something worth wearing.</p></div>';
-    foot.style.display = 'none';
-    return;
-  }
+ if (!cart.length) {
+ body.innerHTML = '<div class="cart-empty"><p>Your bag is empty.<br>Add something worth wearing.</p></div>';
+ foot.style.display = 'none';
+ return;
+ }
 
-  foot.style.display = 'block';
-  totalEl.textContent = '$' + total;
-  shipEl.textContent = total >= 100 ? '✓ Free shipping applied' : 'Add $' + (100 - total) + ' more for free shipping';
+ foot.style.display = 'block';
+ totalEl.textContent = '$' + total;
+ shipEl.textContent = 'Shipping calculated at Shopify checkout';
 
-  body.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <div class="cart-item-img">
-        <img src="${productImages[item.id]}" alt="${item.name}">
-      </div>
-      <div class="ci-info">
-        <div>
-          <div class="ci-name">${item.name}</div>
-          <div class="ci-sub">${item.color} · Size M</div>
-        </div>
-        <div class="ci-price">$${item.price * item.qty}</div>
-        <div class="ci-qty">
-          <button onclick="changeQty(${item.id}, -1)">−</button>
-          <span>${item.qty}</span>
-          <button onclick="changeQty(${item.id}, 1)">+</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
+ body.innerHTML = cart.map(item => `
+ <div class="cart-item">
+ <div class="cart-item-img">
+ <img src="${item.img}" alt="${item.name}">
+ </div>
+ <div class="ci-info">
+ <div>
+ <div class="ci-name">${item.name}</div>
+ <div class="ci-sub">${item.color} · Size ${item.size}</div>
+ </div>
+ <div class="ci-price">$${item.price * item.qty}</div>
+ <div class="ci-qty">
+ <button onclick="changeQty('${item.lineId}', -1)">−</button>
+ <span>${item.qty}</span>
+ <button onclick="changeQty('${item.lineId}', 1)">+</button>
+ </div>
+ </div>
+ </div>
+ `).join('');
 }
 
-function openCart()  {
-  document.getElementById('cart').classList.add('show');
-  document.getElementById('overlay').classList.add('show');
-  document.body.style.overflow = 'hidden';
+function openCart() {
+ document.getElementById('cart').classList.add('show');
+ document.getElementById('overlay').classList.add('show');
+ document.body.style.overflow = 'hidden';
 }
 function closeCart() {
-  document.getElementById('cart').classList.remove('show');
-  document.getElementById('overlay').classList.remove('show');
-  document.body.style.overflow = '';
+ document.getElementById('cart').classList.remove('show');
+ document.getElementById('overlay').classList.remove('show');
+ document.body.style.overflow = '';
 }
 function toggleCart() {
-  document.getElementById('cart').classList.contains('show') ? closeCart() : openCart();
+ document.getElementById('cart').classList.contains('show') ? closeCart() : openCart();
 }
 
 function goCheckout() {
-  alert('In your live Shopify store, this button connects directly to checkout.\n\nSet up at shopify.com → Connect Printful → You\'re live.');
+ if (!cart.length) return;
+ // Prefer product URL of the most recently added line (variant IDs unknown)
+ const url = cart[cart.length - 1].url || lastCheckoutUrl;
+ window.location.href = url;
 }
 
 // ── SIZE SELECTOR ─────────────────────────────────────────────────
 function pickSize(el) {
-  el.closest('.size-row').querySelectorAll('.size-pill').forEach(p => p.classList.remove('sel'));
-  el.classList.add('sel');
+ el.closest('.size-row').querySelectorAll('.size-pill').forEach(p => p.classList.remove('sel'));
+ el.classList.add('sel');
 }
 
 // ── FILTER ───────────────────────────────────────────────────────
 function filterProducts(cat, btn) {
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+ document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+ btn.classList.add('active');
 
-  document.querySelectorAll('.product-card').forEach(card => {
-    const c = card.dataset.cat || '';
-    card.style.display = (cat === 'all' || c.includes(cat)) ? '' : 'none';
-  });
+ document.querySelectorAll('.product-card').forEach(card => {
+ const c = card.dataset.cat || '';
+ card.style.display = (cat === 'all' || c.includes(cat)) ? '' : 'none';
+ });
 }
 
 // ── SMOOTH SCROLL ─────────────────────────────────────────────────
 function scrollTo(sel) {
-  const el = document.querySelector(sel);
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
+ const el = document.querySelector(sel);
+ if (el) el.scrollIntoView({ behavior: 'smooth' });
 }
 
 // ── NEWSLETTER ────────────────────────────────────────────────────
 function subscribe() {
-  const v = document.getElementById('nl-email').value;
-  if (!v.includes('@')) { alert('Enter a valid email.'); return; }
-  document.getElementById('nl-email').value = '';
-  alert('You\'re on the list. First to know about every PB drop.');
+ const v = document.getElementById('nl-email').value;
+ if (!v.includes('@')) { alert('Enter a valid email.'); return; }
+ document.getElementById('nl-email').value = '';
+ alert('You\'re on the list. First to know about every Deji drop.');
 }
 
 // ── REVEAL ON SCROLL ─────────────────────────────────────────────
 const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+ entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
 }, { threshold: 0.08 });
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 </script>
