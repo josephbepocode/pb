@@ -1,46 +1,89 @@
-const SHOP = 'https://9z9z0b-ic.myshopify.com';
-/* ── VARIANT_MAP ─────────────────────────────────────────────────────────────
-   Shopify variant IDs: handle → colour → size → numeric variantId.
-   LEFT EMPTY ON PURPOSE: real IDs could not be read (store returns HTTP 402).
-   Fill from Shopify admin (Products → variant URL …/variants/<ID>) or
-   https://9z9z0b-ic.myshopify.com/products/<handle>.js once the store is live.
-   When every line in the bag has an ID, checkout uses a cart permalink:
-     SHOP/cart/<variantId>:<qty>,<variantId>:<qty>
-   Otherwise it falls back honestly to the product page (no ?variant guess).
-   ───────────────────────────────────────────────────────────────────────── */
+/* ── STORE CONFIG (single source of truth) ───────────────────────────────── */
+const STORE_LIVE = false; // 9z9z0b-ic currently returns HTTP 402. Flip to true once the Shopify plan is active.
+const SHOP_DOMAIN = '9z9z0b-ic.myshopify.com';
+const SHOP = 'https://' + SHOP_DOMAIN;
+const SITE = 'https://shop.bepojoseph.xyz/';
+/* VARIANT_MAP: handle → colour → size → numeric Shopify variant ID.
+   LEFT EMPTY ON PURPOSE (store 402, no IDs in any file). Fill from Shopify admin
+   (Products → variant → URL …/variants/<ID>) or SHOP/products/<handle>.js once live.
+   When every bag line has an ID, checkout uses SHOP/cart/<id>:<qty>,<id>:<qty>.
+   If any ID is missing, the bag lists per-line "Open on Shopify" links instead —
+   no line is ever dropped. */
 const VARIANT_MAP = {
 'hdy-001-pullover': { BLK: {}, HGR: {}, BON: {} },
 'pnt-001-extra-wide': { BLK: {}, HGR: {}, BON: {} },
 'drop1-set': { BLK: {}, HGR: {}, BON: {} }
 };
-const IMG = { BLK: 'assets/HDY-PNT-BLK.svg', HGR: 'assets/HDY-PNT-HGR.svg', BON: 'assets/HDY-PNT-BON.svg' };
-const PRODUCTS = {
-hdy: { id: 'hdy', handle: 'hdy-001-pullover', name: 'HDY-001 Pullover', price: 98, desc: 'HDY-001 pullover. 420 GSM 80/20 brushed fleece. Relaxed oversized, kangaroo pocket. PB geometric monogram, left chest only.' },
-pnt: { id: 'pnt', handle: 'pnt-001-extra-wide', name: 'PNT-001 Extra-Wide Pants', price: 94, desc: 'PNT-001 extra-wide pooling fleece pants. 420 GSM 80/20 brushed fleece. Clean exterior, no logo.' },
-set: { id: 'set', handle: 'drop1-set', name: 'Drop 1 Set', price: 192, desc: 'HDY-001 Pullover + PNT-001 Extra-Wide Pants. Matched colour and size.' }
+const SIZES = ['S', 'M', 'L', 'XL', '2XL'];
+const COLORS = {
+BLK: { label: 'Black (BLK)', hex: '#1a1a1a' },
+HGR: { label: 'Heather Grey (HGR)', hex: '#9a9a98' },
+BON: { label: 'Bone (BON)', hex: '#e8e2d6' }
 };
-Object.values(PRODUCTS).forEach(p => { p.url = SHOP + '/products/' + p.handle; p.images = IMG; });
-const COLOR_LABELS = { BLK: 'Black (BLK)', HGR: 'Heather Grey (HGR)', BON: 'Bone (BON)' };
+const COLOR_LABELS = Object.fromEntries(Object.entries(COLORS).map(([k, v]) => [k, v.label]));
+const PRODUCTS = {
+hdy: { id: 'hdy', sku: 'HDY-001', handle: 'hdy-001-pullover', name: 'HDY-001 Pullover', short: 'Pullover', price: 98, crop: 'pullover', zoom: true,
+desc: 'HDY-001 pullover. 420 GSM 80/20 brushed fleece. Relaxed oversized, kangaroo pocket. PB geometric monogram, left chest only.' },
+pnt: { id: 'pnt', sku: 'PNT-001', handle: 'pnt-001-extra-wide', name: 'PNT-001 Extra-Wide Pants', short: 'Pants', price: 94, crop: 'pants', zoom: false,
+desc: 'PNT-001 extra-wide pooling fleece pants. 420 GSM 80/20 brushed fleece. Clean exterior, no logo.' },
+set: { id: 'set', sku: 'SET-001', handle: 'drop1-set', name: 'Drop 1 Set', short: 'Set', price: 192, crop: 'set', zoom: true,
+desc: 'HDY-001 Pullover + PNT-001 Extra-Wide Pants. Matched colour and size.' }
+};
+Object.values(PRODUCTS).forEach(p => { p.url = SHOP + '/products/' + p.handle; });
+const IMG = { BLK: 'assets/HDY-PNT-BLK.svg', HGR: 'assets/HDY-PNT-HGR.svg', BON: 'assets/HDY-PNT-BON.svg' };
+const crop = (color, kind) => 'assets/img/' + color + '-' + kind + '.webp';
 const CART_KEY = 'deji_cart_v1';
-const variantId = (handle, color, size) => ((VARIANT_MAP[handle] || {})[color] || {})[size] || null;
-function loadCart() { try { const c = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); return Array.isArray(c) ? c.filter(i => PRODUCTS[i.id] && COLOR_LABELS[i.color] && i.qty > 0) : []; } catch (e) { return []; } }
-function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {} }
-let cart = loadCart();
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const root = document.documentElement;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const sm = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
-/* Checkout URL: permalink when all IDs known, else honest product-page fallback. */
-function checkoutUrl(items) {
-items = items || cart;
-if (!items.length) return null;
-const ids = items.map(i => variantId(PRODUCTS[i.id].handle, i.color, i.size));
-if (ids.every(Boolean)) return SHOP + '/cart/' + items.map((i, n) => ids[n] + ':' + i.qty).join(',');
-return PRODUCTS[items[0].id].url;
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+/* Prices / JSON-LD rendered from PRODUCTS */
+$$('[data-price]').forEach(n => { const p = PRODUCTS[n.dataset.price]; if (p) n.textContent = '$' + p.price; });
+(function jsonLd() {
+const s = document.createElement('script'); s.type = 'application/ld+json';
+s.textContent = JSON.stringify(Object.values(PRODUCTS).map(p => ({
+'@context': 'https://schema.org', '@type': 'Product', name: p.name, sku: p.sku, brand: { '@type': 'Brand', name: 'Deji' },
+description: p.desc, image: SITE + 'assets/og-drop1.jpg',
+offers: { '@type': 'Offer', price: p.price.toFixed(2), url: p.url } /* priceCurrency omitted: store currency unconfirmed */
+})));
+document.head.appendChild(s);
+})();
+
+/* ── Cart ── */
+const variantId = (handle, color, size) => ((VARIANT_MAP[handle] || {})[color] || {})[size] || null;
+function loadCart() {
+try {
+const raw = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+if (!Array.isArray(raw)) return [];
+const out = [];
+raw.forEach(i => {
+if (!i || !PRODUCTS[i.id] || !COLORS[i.color] || !SIZES.includes(i.size)) return;
+const qty = Number(i.qty);
+if (!Number.isInteger(qty) || qty < 1) return;
+const lineId = i.id + '-' + i.color + '-' + i.size;
+if (out.some(o => o.lineId === lineId)) return;
+out.push({ lineId, id: i.id, color: i.color, size: i.size, qty: Math.min(qty, 10) });
+});
+return out;
+} catch (e) { return []; }
 }
-window.DEJI = { VARIANT_MAP, checkoutUrl, getCart: () => cart.slice() };
+function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {} }
+let cart = loadCart();
+/* Returns { mode: 'closed' | 'permalink' | 'perline', url?, lines? } — never drops a line. */
+function checkoutPlan(items) {
+items = items || cart;
+if (!items.length) return { mode: 'empty' };
+if (!STORE_LIVE) return { mode: 'closed' };
+const ids = items.map(i => variantId(PRODUCTS[i.id].handle, i.color, i.size));
+if (ids.every(Boolean)) return { mode: 'permalink', url: SHOP + '/cart/' + items.map((i, n) => ids[n] + ':' + i.qty).join(',') };
+return { mode: 'perline', lines: items.map((i, n) => ({ line: i, url: ids[n] ? SHOP + '/cart/' + ids[n] + ':' + i.qty : PRODUCTS[i.id].url })) };
+}
+window.DEJI = { STORE_LIVE, VARIANT_MAP, PRODUCTS, checkoutPlan, getCart: () => cart.slice() };
+
 function selectedSize(scope) { const s = scope.querySelector('.size-pill.sel'); return s ? s.textContent.trim() : null; }
 function bindSizes(scope, onPick) {
 $$('.size-pill', scope).forEach(p => p.addEventListener('click', () => {
@@ -48,29 +91,30 @@ $$('.size-pill', scope).forEach(x => { x.classList.remove('sel'); x.setAttribute
 p.classList.add('sel'); p.setAttribute('aria-pressed', 'true'); onPick && onPick(p.textContent.trim());
 }));
 }
-function swapImg(img, src, alt) {
+function swapImg(img, src, alt, srcset) {
 if (!img) return;
 img.classList.add('swap');
 const pre = new Image();
-pre.onload = pre.onerror = () => setTimeout(() => { img.src = src; img.alt = alt; img.classList.remove('swap'); }, reduce ? 0 : 200);
+pre.onload = pre.onerror = () => setTimeout(() => { if (srcset !== undefined) { if (srcset) img.srcset = srcset; else img.removeAttribute('srcset'); } img.src = src; img.alt = alt; img.classList.remove('swap'); }, reduce ? 0 : 160);
 pre.src = src;
 }
-function addToCart(key, color, size) {
+function addToCart(key, color, size, trigger) {
 const p = PRODUCTS[key];
-if (!p || !size) return false;
+if (!p || !COLORS[color] || !SIZES.includes(size)) return false;
 const lineId = key + '-' + color + '-' + size;
 const ex = cart.find(i => i.lineId === lineId);
-if (ex) ex.qty++; else cart.push({ lineId, id: key, color, size, qty: 1 });
-saveCart(); renderCart(); openCart();
+if (ex) ex.qty = Math.min(10, ex.qty + 1); else cart.push({ lineId, id: key, color, size, qty: 1 });
+saveCart(); renderCart(); openCart(trigger);
 const bag = $('#bag'); bag.classList.remove('bump'); void bag.offsetWidth; bag.classList.add('bump');
 return true;
 }
 function changeQty(lineId, d) {
 const i = cart.findIndex(x => x.lineId === lineId);
 if (i < 0) return;
-cart[i].qty += d;
+cart[i].qty = Math.min(10, cart[i].qty + d);
 if (cart[i].qty <= 0) cart.splice(i, 1);
 saveCart(); renderCart();
+const again = $('[data-q="' + lineId + '"][data-d="' + d + '"]'); if (again) again.focus(); else $('#cartClose').focus();
 }
 function renderCart() {
 const count = cart.reduce((s, i) => s + i.qty, 0);
@@ -78,76 +122,122 @@ const total = cart.reduce((s, i) => s + PRODUCTS[i.id].price * i.qty, 0);
 $('#cart-count').textContent = count;
 $('#bag').setAttribute('aria-label', 'Open bag, ' + count + (count === 1 ? ' item' : ' items'));
 const body = $('#cart-body'), foot = $('#cart-foot');
+body.textContent = '';
 if (!cart.length) {
-body.innerHTML = '<div class="cart-empty"><p>Your bag is empty.<br>Add something worth wearing.</p></div>';
+const e = el('div', 'cart-empty'); const p = el('p'); p.append('Your bag is empty.', el('br'), 'Add something worth wearing.'); e.append(p); body.append(e);
 foot.style.display = 'none';
 return;
 }
 foot.style.display = 'block';
 $('#cart-total').textContent = '$' + total;
-const permalink = cart.every(i => variantId(PRODUCTS[i.id].handle, i.color, i.size));
-$('#ship-note').textContent = permalink ? 'Shipping calculated at Shopify checkout' : 'Checkout opens the product page on Shopify — pick colour & size there to confirm.';
-body.innerHTML = cart.map(item => { const p = PRODUCTS[item.id]; return `
-<div class="cart-item" data-line="${item.lineId}">
-<div class="cart-item-img"><img src="${IMG[item.color]}" alt="" style="object-position:50% 40%;transform:scale(1.5);transform-origin:50% 40%"></div>
-<div class="ci-info">
-<div><div class="ci-name">${p.name}</div><div class="ci-sub">${COLOR_LABELS[item.color]} · Size ${item.size}</div></div>
-<div class="ci-price">$${p.price * item.qty}</div>
-<div class="ci-qty"><button type="button" aria-label="Decrease ${p.name} ${item.size}" data-q="${item.lineId}" data-d="-1">−</button><span>${item.qty}</span><button type="button" aria-label="Increase ${p.name} ${item.size}" data-q="${item.lineId}" data-d="1">+</button></div>
-</div>
-</div>`; }).join('');
+cart.forEach(item => {
+const p = PRODUCTS[item.id];
+const row = el('div', 'cart-item'); row.dataset.line = item.lineId;
+const thumb = el('div', 'cart-item-img'); const im = el('img'); im.src = crop(item.color, p.crop); im.alt = ''; im.width = 96; im.height = 120; im.loading = 'lazy'; thumb.append(im);
+const info = el('div', 'ci-info');
+const top = el('div'); top.append(el('div', 'ci-name', p.name), el('div', 'ci-sub', COLOR_LABELS[item.color] + ' · Size ' + item.size));
+const qty = el('div', 'ci-qty');
+[['−', -1, 'Decrease'], [null], ['+', 1, 'Increase']].forEach(([t, d, lab]) => {
+if (t === null) { qty.append(el('span', null, String(item.qty))); return; }
+const b = el('button', null, t); b.type = 'button'; b.dataset.q = item.lineId; b.dataset.d = d; b.setAttribute('aria-label', lab + ' ' + p.short + ' ' + item.color + ' ' + item.size); qty.append(b);
+});
+info.append(top, el('div', 'ci-price', '$' + p.price * item.qty), qty);
+row.append(thumb, info); body.append(row);
+});
+const plan = checkoutPlan(), btn = $('#checkout'), note = $('#ship-note'), lines = $('#cart-lines');
+lines.textContent = ''; lines.hidden = true; btn.hidden = false;
+if (plan.mode === 'closed') {
+btn.setAttribute('aria-disabled', 'true'); btn.textContent = 'Store reopening soon — your bag is saved';
+note.textContent = 'Checkout runs on Shopify and opens when the store is back online.';
+} else if (plan.mode === 'permalink') {
+btn.setAttribute('aria-disabled', 'false'); btn.textContent = 'Checkout →';
+note.textContent = 'Shipping calculated at Shopify checkout';
+} else {
+btn.hidden = true; lines.hidden = false;
+note.textContent = 'Each item opens on Shopify — add them there to check out together.';
+plan.lines.forEach(({ line, url }) => {
+const a = el('a', 'btn btn-line cart-line-link', 'Open ' + PRODUCTS[line.id].short + ' — ' + line.color + ' / ' + line.size + ' on Shopify ↗');
+a.href = url; a.target = '_blank'; a.rel = 'noopener'; lines.append(a);
+});
 }
-let lastFocus = null;
-function openCart() {
-lastFocus = document.activeElement;
-$('#cart').classList.add('show'); $('#overlay').classList.add('show');
-$('#cart').setAttribute('aria-hidden', 'false');
+}
+function goCheckout() { const plan = checkoutPlan(); if (plan.mode === 'permalink') window.location.href = plan.url; }
+
+/* ── Dialogs: focus management, Tab trap, inert background ── */
+const BG = () => [$('#nav'), $('#menu'), $('main'), $('footer'), $('#shopPill')].filter(Boolean);
+let openDialog = null, dialogReturn = null;
+const focusables = d => $$('a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])', d).filter(e => !e.hidden && e.offsetParent !== null);
+function showDialog(d, first, trigger) {
+dialogReturn = trigger || document.activeElement;
+openDialog = d;
+BG().forEach(n => { n.inert = true; });
 document.body.classList.add('lock');
-$('#cartClose').focus({ preventScroll: true });
+const go = () => { const f = first || focusables(d)[0]; if (f) f.focus({ preventScroll: true }); };
+requestAnimationFrame(() => requestAnimationFrame(() => { go(); if (document.activeElement !== (first || focusables(d)[0])) setTimeout(go, 120); }));
+}
+function hideDialog() {
+BG().forEach(n => { n.inert = false; });
+document.body.classList.remove('lock');
+const r = dialogReturn; openDialog = null; dialogReturn = null;
+if (r && r.focus && r.isConnected) r.focus({ preventScroll: true });
+}
+document.addEventListener('keydown', e => {
+if (!openDialog || e.key !== 'Tab') return;
+const f = focusables(openDialog); if (!f.length) return;
+const a = f[0], z = f[f.length - 1];
+if (!openDialog.contains(document.activeElement)) { e.preventDefault(); a.focus(); return; }
+if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); }
+else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); }
+});
+const cartEl = $('#cart');
+function openCart(trigger) {
+if (openDialog === sg) closeSG();
+cartEl.classList.add('show'); $('#overlay').classList.add('show');
+cartEl.setAttribute('aria-hidden', 'false');
+showDialog(cartEl, $('#cartClose'), trigger);
 }
 function closeCart() {
-if (!$('#cart').classList.contains('show')) return;
-$('#cart').classList.remove('show'); $('#overlay').classList.remove('show');
-$('#cart').setAttribute('aria-hidden', 'true');
-document.body.classList.remove('lock');
-if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+if (!cartEl.classList.contains('show')) return;
+cartEl.classList.remove('show'); $('#overlay').classList.remove('show');
+cartEl.setAttribute('aria-hidden', 'true');
+hideDialog();
 }
-function toggleCart() { $('#cart').classList.contains('show') ? closeCart() : openCart(); }
-function goCheckout() { const u = checkoutUrl(); if (u) window.location.href = u; }
-$('#bag').addEventListener('click', toggleCart);
+$('#bag').addEventListener('click', e => cartEl.classList.contains('show') ? closeCart() : openCart(e.currentTarget));
 $('#cartClose').addEventListener('click', closeCart);
 $('#overlay').addEventListener('click', closeCart);
 $('#keep').addEventListener('click', closeCart);
 $('#checkout').addEventListener('click', goCheckout);
 $('#cart-body').addEventListener('click', e => { const b = e.target.closest('[data-q]'); if (b) changeQty(b.dataset.q, +b.dataset.d); });
-/* Size guide */
-const sg = $('#sg'); let sgFrom = null;
-function openSG() { sgFrom = document.activeElement; sg.hidden = false; document.body.classList.add('lock'); $('#sgClose').focus(); }
-function closeSG() { if (sg.hidden) return; sg.hidden = true; document.body.classList.remove('lock'); sgFrom && sgFrom.focus && sgFrom.focus(); }
+const sg = $('#sg');
+function openSG(e) { sg.hidden = false; showDialog(sg, $('#sgClose'), e && e.currentTarget); }
+function closeSG() { if (sg.hidden) return; sg.hidden = true; hideDialog(); }
 $$('[data-sg]').forEach(b => b.addEventListener('click', openSG));
 $('#sgClose').addEventListener('click', closeSG);
 sg.addEventListener('click', e => { if (e.target === sg) closeSG(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeSG(); closeCart(); setMenu(false); } });
-/* Collection cards: size required */
+
+/* ── Collection cards (compact): size required, status message ── */
 $$('.card').forEach(card => {
-const key = card.dataset.product, btn = $('.quick-add', card);
-const sync = () => { const ok = !!selectedSize(card); btn.setAttribute('aria-disabled', ok ? 'false' : 'true'); btn.textContent = ok ? 'Add to Bag' : 'Select a size'; };
+const key = card.dataset.product, btn = $('.quick-add', card), msg = $('.sz-msg', card);
+const sync = () => { const ok = !!selectedSize(card); btn.setAttribute('aria-disabled', ok ? 'false' : 'true'); btn.textContent = ok ? 'Add to Bag' : 'Select a size'; if (ok && msg) msg.textContent = ''; };
 $$('.sw', card).forEach(sw => sw.addEventListener('click', () => {
 card.dataset.color = sw.dataset.color;
 $$('.sw', card).forEach(s => s.setAttribute('aria-pressed', s === sw ? 'true' : 'false'));
 $('.cl', card).textContent = COLOR_LABELS[sw.dataset.color];
-swapImg(document.getElementById('img-' + key), IMG[sw.dataset.color], PRODUCTS[key].name + ' — ' + COLOR_LABELS[sw.dataset.color]);
+const img = document.getElementById('img-' + key);
+swapImg(img, crop(sw.dataset.color, PRODUCTS[key].crop), PRODUCTS[key].name + ' — ' + COLOR_LABELS[sw.dataset.color]);
 }));
 bindSizes(card, sync); sync();
-btn.addEventListener('click', () => {
+btn.addEventListener('click', e => {
 const size = selectedSize(card);
-if (!size) { $('.sizes', card).classList.add('need'); setTimeout(() => $('.sizes', card).classList.remove('need'), 900); return; }
-addToCart(key, card.dataset.color || 'BLK', size);
+if (!size) { if (msg) msg.textContent = 'Choose a size'; $('.sizes', card).classList.add('need'); setTimeout(() => $('.sizes', card).classList.remove('need'), 900); return; }
+addToCart(key, card.dataset.color || 'BLK', size, e.currentTarget);
 });
 });
-/* Buy-box */
-const buy = { p: 'hdy', color: 'BLK', size: null };
-const buyImg = $('#buyImg'), buyStage = $('#buyStage'), buyAdd = $('#buyAdd'), buyMsg = $('#buyMsg');
+
+/* ── Buy-box ── */
+const buy = { p: 'hdy', color: 'BLK', size: null, zoom: false };
+const buyImg = $('#buyImg'), buySrc = $('#buySrc'), buyStage = $('#buyStage'), buyAdd = $('#buyAdd'), buyMsg = $('#buyMsg');
 function buySync() {
 const ok = !!buy.size;
 buyAdd.setAttribute('aria-disabled', ok ? 'false' : 'true');
@@ -155,42 +245,65 @@ buyAdd.textContent = ok ? 'Add to Bag — $' + PRODUCTS[buy.p].price : 'Select a
 if (ok) buyMsg.textContent = '';
 }
 function buyView() {
+const p = PRODUCTS[buy.p];
 buyStage.dataset.view = buy.p;
 $('#buyCl').textContent = COLOR_LABELS[buy.color];
-$('#buyDesc').textContent = PRODUCTS[buy.p].desc;
-const z = $('#buyZoom'); const canZoom = buy.p !== 'pnt';
-z.hidden = !canZoom; if (!canZoom) { buyStage.dataset.zoom = '0'; z.setAttribute('aria-pressed', 'false'); }
-swapImg(buyImg, IMG[buy.color], PRODUCTS[buy.p].name + ' — ' + COLOR_LABELS[buy.color]);
+$('#buyDesc').textContent = p.desc;
+const z = $('#buyZoom');
+z.hidden = !p.zoom; if (!p.zoom) buy.zoom = false;
+z.setAttribute('aria-pressed', buy.zoom ? 'true' : 'false');
+buyStage.dataset.zoom = buy.zoom ? '1' : '0';
+const kind = buy.zoom ? 'chest' : p.crop;
+if (buySrc) buySrc.removeAttribute('srcset');
+swapImg(buyImg, crop(buy.color, kind), (buy.zoom ? 'PB left-chest monogram — ' : p.name + ' — ') + COLOR_LABELS[buy.color], '');
 buySync();
 }
-$$('.buy-prod [data-p]').forEach(b => b.addEventListener('click', () => {
-buy.p = b.dataset.p; $$('.buy-prod [data-p]').forEach(x => x.setAttribute('aria-checked', x === b ? 'true' : 'false')); buyView();
-}));
+const prodBtns = $$('.buy-prod [data-p]');
+prodBtns.forEach((b, n) => {
+b.addEventListener('click', () => { buy.p = b.dataset.p; prodBtns.forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false')); buyView(); });
+b.addEventListener('keydown', e => {
+const d = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+if (!d) return; e.preventDefault(); const t = prodBtns[(n + d + prodBtns.length) % prodBtns.length]; t.focus(); t.click();
+});
+});
 $$('#buySw .sw').forEach(sw => sw.addEventListener('click', () => {
 buy.color = sw.dataset.color; $$('#buySw .sw').forEach(s => s.setAttribute('aria-pressed', s === sw ? 'true' : 'false')); buyView();
 }));
 bindSizes($('#buySz'), s => { buy.size = s; buySync(); });
-$('#buyZoom').addEventListener('click', e => { const on = buyStage.dataset.zoom !== '1'; buyStage.dataset.zoom = on ? '1' : '0'; e.currentTarget.setAttribute('aria-pressed', on); });
-buyAdd.addEventListener('click', () => {
+$('#buyZoom').addEventListener('click', () => { buy.zoom = !buy.zoom; buyView(); });
+buyAdd.addEventListener('click', e => {
 if (!buy.size) { buyMsg.textContent = 'Choose a size first.'; $('#buySz').classList.add('need'); setTimeout(() => $('#buySz').classList.remove('need'), 900); return; }
-addToCart(buy.p, buy.color, buy.size);
+addToCart(buy.p, buy.color, buy.size, e.currentTarget);
 });
+$$('[data-pick]').forEach(a => a.addEventListener('click', () => { const b = $('.buy-prod [data-p="' + a.dataset.pick + '"]'); if (b) b.click(); }));
 /* Hook for a future 360 sprite / 3D viewer. Intentionally a no-op: no sprite or model exists yet. */
 function initTurntable() { const src = buyStage.dataset.sprite; if (!src) return; /* implement sprite scrub here when assets exist */ }
 initTurntable();
 buySync(); renderCart();
-/* Sticky "Shop Drop 1" pill: hidden while the buy-box is in view or at the very top */
+
+/* Sticky "Shop Drop 1" pill: hidden (and unfocusable) while #buy is in view or near the top */
 const pill = $('#shopPill');
 if ('IntersectionObserver' in window) {
 let inView = true;
-new IntersectionObserver(es => es.forEach(e => { inView = e.isIntersecting; pill.classList.toggle('show', !inView && scrollY > innerHeight * .5); }), { threshold: 0.15 }).observe($('#buy'));
-addEventListener('scroll', () => pill.classList.toggle('show', !inView && scrollY > innerHeight * .5), { passive: true });
+const upd = () => { const on = !inView && scrollY > innerHeight * .5; pill.classList.toggle('show', on); if (!on && document.activeElement === pill) pill.blur(); };
+new IntersectionObserver(es => es.forEach(e => { inView = e.isIntersecting; upd(); }), { threshold: 0.15 }).observe($('#buy'));
+addEventListener('scroll', upd, { passive: true });
 }
-$('#nl').addEventListener('submit', e => {
+
+/* Newsletter */
+const nl = $('#nl'), nlMsg = $('#nl-msg');
+if (!STORE_LIVE) {
+nl.hidden = true; nlMsg.textContent = 'Early access opens with the store.';
+} else {
+nl.addEventListener('submit', e => {
+e.preventDefault();
 const inp = $('#nl-email');
-if (!inp.checkValidity()) { e.preventDefault(); inp.reportValidity(); }
-/* otherwise the form posts to Shopify's customer signup (form_type=customer, tags=newsletter) */
+if (!inp.checkValidity()) { nlMsg.textContent = 'Enter a valid email.'; inp.focus(); return; }
+fetch(nl.action, { method: 'POST', body: new FormData(nl), mode: 'no-cors' })
+.then(() => { nlMsg.textContent = "You're on the list."; nl.reset(); })
+.catch(() => { nlMsg.textContent = 'Something went wrong. Try again.'; });
 });
+}
 const nav = $('#nav'), menu = $('#menu'), burger = $('#burger');
 function setMenu(on) {
 menu.classList.toggle('open', on); nav.classList.toggle('menu-open', on);
@@ -253,6 +366,7 @@ if (hsNative) { hs.style.height = ''; return; }
 hsMax = Math.max(0, hsTrack.scrollWidth - innerWidth);
 hs.style.height = (hsMax + innerHeight) + 'px';
 }
+const mqEl = $('#marquee');
 const sig = $('#signature'), stage = $('#stage'), pTop = $('#pTop'), pBot = $('#pBot'), ghost = $$('#ghost span'), cos = $$('.co'), cw = $$('#sigCw span'), sigBar = $('#sigBar'), sigCap = $('#sigCap');
 const imgsT = $$('img', pTop), imgsB = $$('img', pBot);
 let stageH = 0;
@@ -265,8 +379,11 @@ const y = scrollY, vh = innerHeight;
 vel += ((y - (lastY < 0 ? y : lastY)) - vel) * 0.2; lastY = y;
 const k = reduce ? 1 : 1 - Math.pow(1 - 0.11, dt / 16.7);
 nav.classList.toggle('scrolled', y > 40);
-const mr = $('#marquee').getBoundingClientRect();
-if (!reduce && mr.bottom > 0 && mr.top < vh) {
+const mr = mqEl.getBoundingClientRect();
+const tileRects = tiles.map(t => t.vis ? t.el.getBoundingClientRect() : null);
+const hr = hs.getBoundingClientRect(), sr = sig.getBoundingClientRect();
+const mqOn = !reduce && mr.bottom > 0 && mr.top < vh;
+if (mqOn) {
 mqRows.forEach(r => {
 if (!r.w) return;
 r.x += r.dir * (r.sp * dt * 0.06 + Math.abs(vel) * 0.35 * r.sp) ;
@@ -275,8 +392,7 @@ r.el.style.transform = 'translate3d(' + off.toFixed(1) + 'px,0,0)';
 });
 }
 const pm = innerWidth <= 768 ? 0.45 : 1;
-tiles.forEach(t => { if (!t.vis) return; const r = t.el.getBoundingClientRect(); t.px.style.setProperty('--ty', ((r.top + r.height / 2 - vh / 2) * t.s * pm).toFixed(1) + 'px'); });
-const hr = hs.getBoundingClientRect();
+tiles.forEach((t, n) => { const r = tileRects[n]; if (!r) return; t.px.style.setProperty('--ty', ((r.top + r.height / 2 - vh / 2) * t.s * pm).toFixed(1) + 'px'); });
 if (hr.bottom > -vh && hr.top < vh * 2 && !hsNative) {
 hsT = clamp(-hr.top / Math.max(1, hs.offsetHeight - vh), 0, 1);
 hsP += (hsT - hsP) * k;
@@ -284,7 +400,6 @@ hsTrack.style.transform = 'translate3d(' + (-hsP * hsMax).toFixed(1) + 'px,0,0)'
 hs.style.setProperty('--p', hsP.toFixed(4)); hsBar.style.setProperty('--p', hsP.toFixed(4));
 hsCount.textContent = '0' + (Math.round(hsP * (panels.length - 1)) + 1) + ' / 0' + panels.length;
 }
-const sr = sig.getBoundingClientRect();
 if (sr.bottom > -vh && sr.top < vh * 2) {
 sigT = clamp(-sr.top / Math.max(1, sig.offsetHeight - vh), 0, 1);
 sigP += (sigT - sigP) * k;
@@ -313,11 +428,19 @@ if (v > bv) { bv = v; best = c; }
 });
 if (mob) { const t = best && bv > .4 ? best._txt : 'Pullover + extra-wide pants'; if (sigCap._t !== t) { sigCap._t = t; sigCap.textContent = t; } }
 }
+const settled = Math.abs(hsT - hsP) < 1e-4 && Math.abs(sigT - sigP) < 1e-4 && Math.abs(vel) < 0.05 && Math.abs(y - lastScrollKick) < 1;
+lastScrollKick = y;
+if (!mqOn && settled && now - kickedAt > 300) { running = false; return; }
 requestAnimationFrame(frame);
 }
-function setupAll() { setupMarquee(); setupHS(); setupSig(); }
+/* rAF loop only runs while something moves (scroll, resize, smoothing, visible marquee); idles otherwise. */
+let running = false, kickedAt = 0, lastScrollKick = -1;
+function kick() { kickedAt = performance.now(); if (running) return; running = true; last = performance.now(); requestAnimationFrame(frame); }
+addEventListener('scroll', kick, { passive: true });
+addEventListener('resize', kick);
+function setupAll() { setupMarquee(); setupHS(); setupSig(); kick(); }
 addEventListener('resize', () => { clearTimeout(setupAll._t); setupAll._t = setTimeout(setupAll, 150); });
 (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => { setupAll(); });
 setupAll();
 addEventListener('load', setupAll);
-requestAnimationFrame(frame);
+kick();
