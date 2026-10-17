@@ -1,75 +1,82 @@
 const SHOP = 'https://9z9z0b-ic.myshopify.com';
+/* ── VARIANT_MAP ─────────────────────────────────────────────────────────────
+   Shopify variant IDs: handle → colour → size → numeric variantId.
+   LEFT EMPTY ON PURPOSE: real IDs could not be read (store returns HTTP 402).
+   Fill from Shopify admin (Products → variant URL …/variants/<ID>) or
+   https://9z9z0b-ic.myshopify.com/products/<handle>.js once the store is live.
+   When every line in the bag has an ID, checkout uses a cart permalink:
+     SHOP/cart/<variantId>:<qty>,<variantId>:<qty>
+   Otherwise it falls back honestly to the product page (no ?variant guess).
+   ───────────────────────────────────────────────────────────────────────── */
+const VARIANT_MAP = {
+'hdy-001-pullover': { BLK: {}, HGR: {}, BON: {} },
+'pnt-001-extra-wide': { BLK: {}, HGR: {}, BON: {} },
+'drop1-set': { BLK: {}, HGR: {}, BON: {} }
+};
 const IMG = { BLK: 'assets/HDY-PNT-BLK.svg', HGR: 'assets/HDY-PNT-HGR.svg', BON: 'assets/HDY-PNT-BON.svg' };
 const PRODUCTS = {
-hdy: { id: 'hdy', name: 'HDY-001 Pullover', price: 98, url: SHOP + '/products/hdy-001-pullover', images: IMG },
-pnt: { id: 'pnt', name: 'PNT-001 Extra-Wide Pants', price: 94, url: SHOP + '/products/pnt-001-extra-wide', images: IMG },
-set: { id: 'set', name: 'Drop 1 Set', price: 192, url: SHOP + '/products/drop1-set', images: IMG }
+hdy: { id: 'hdy', handle: 'hdy-001-pullover', name: 'HDY-001 Pullover', price: 98, desc: 'HDY-001 pullover. 420 GSM 80/20 brushed fleece. Relaxed oversized, kangaroo pocket. PB geometric monogram, left chest only.' },
+pnt: { id: 'pnt', handle: 'pnt-001-extra-wide', name: 'PNT-001 Extra-Wide Pants', price: 94, desc: 'PNT-001 extra-wide pooling fleece pants. 420 GSM 80/20 brushed fleece. Clean exterior, no logo.' },
+set: { id: 'set', handle: 'drop1-set', name: 'Drop 1 Set', price: 192, desc: 'HDY-001 Pullover + PNT-001 Extra-Wide Pants. Matched colour and size.' }
 };
+Object.values(PRODUCTS).forEach(p => { p.url = SHOP + '/products/' + p.handle; p.images = IMG; });
 const COLOR_LABELS = { BLK: 'Black (BLK)', HGR: 'Heather Grey (HGR)', BON: 'Bone (BON)' };
-let cart = [];
-let lastCheckoutUrl = PRODUCTS.hdy.url;
+const CART_KEY = 'deji_cart_v1';
+const variantId = (handle, color, size) => ((VARIANT_MAP[handle] || {})[color] || {})[size] || null;
+function loadCart() { try { const c = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); return Array.isArray(c) ? c.filter(i => PRODUCTS[i.id] && COLOR_LABELS[i.color] && i.qty > 0) : []; } catch (e) { return []; } }
+function saveCart() { try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) {} }
+let cart = loadCart();
 const $ = (s, r) => (r || document).querySelector(s);
 const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const root = document.documentElement;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const sm = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
-function selectedSize(card) { const s = card.querySelector('.size-pill.sel'); return s ? s.textContent.trim() : 'M'; }
-function selectedColor(card) { return card.dataset.color || 'BLK'; }
-function setColor(el, key, color) {
-const card = el.closest('.card');
-card.dataset.color = color;
-$$('.sw', card).forEach(s => s.setAttribute('aria-pressed', s === el ? 'true' : 'false'));
-$('.cl', card).textContent = COLOR_LABELS[color];
-const img = document.getElementById('img-' + key);
-if (img && PRODUCTS[key]) {
-const src = PRODUCTS[key].images[color];
+/* Checkout URL: permalink when all IDs known, else honest product-page fallback. */
+function checkoutUrl(items) {
+items = items || cart;
+if (!items.length) return null;
+const ids = items.map(i => variantId(PRODUCTS[i.id].handle, i.color, i.size));
+if (ids.every(Boolean)) return SHOP + '/cart/' + items.map((i, n) => ids[n] + ':' + i.qty).join(',');
+return PRODUCTS[items[0].id].url;
+}
+window.DEJI = { VARIANT_MAP, checkoutUrl, getCart: () => cart.slice() };
+function selectedSize(scope) { const s = scope.querySelector('.size-pill.sel'); return s ? s.textContent.trim() : null; }
+function bindSizes(scope, onPick) {
+$$('.size-pill', scope).forEach(p => p.addEventListener('click', () => {
+$$('.size-pill', scope).forEach(x => { x.classList.remove('sel'); x.setAttribute('aria-pressed', 'false'); });
+p.classList.add('sel'); p.setAttribute('aria-pressed', 'true'); onPick && onPick(p.textContent.trim());
+}));
+}
+function swapImg(img, src, alt) {
+if (!img) return;
 img.classList.add('swap');
 const pre = new Image();
-pre.onload = pre.onerror = () => setTimeout(() => {
-img.src = src; img.alt = PRODUCTS[key].name + ' — ' + COLOR_LABELS[color];
-img.classList.remove('swap');
-}, reduce ? 0 : 200);
+pre.onload = pre.onerror = () => setTimeout(() => { img.src = src; img.alt = alt; img.classList.remove('swap'); }, reduce ? 0 : 200);
 pre.src = src;
 }
-}
-function quickAdd(key, btn) {
+function addToCart(key, color, size) {
 const p = PRODUCTS[key];
-if (!p) return;
-const card = btn ? btn.closest('.card') : $('.card[data-product="' + key + '"]');
-const color = card ? selectedColor(card) : 'BLK';
-const size = card ? selectedSize(card) : 'M';
+if (!p || !size) return false;
 const lineId = key + '-' + color + '-' + size;
 const ex = cart.find(i => i.lineId === lineId);
-if (ex) ex.qty++;
-else cart.push({ lineId, id: key, name: p.name, price: p.price, color: COLOR_LABELS[color] || color, size, qty: 1, img: p.images[color], url: p.url });
-lastCheckoutUrl = p.url;
-renderCart();
-openCart();
+if (ex) ex.qty++; else cart.push({ lineId, id: key, color, size, qty: 1 });
+saveCart(); renderCart(); openCart();
 const bag = $('#bag'); bag.classList.remove('bump'); void bag.offsetWidth; bag.classList.add('bump');
-if (btn) {
-const orig = btn.dataset.label || btn.textContent;
-btn.textContent = 'Added ✓';
-setTimeout(() => {
-btn.textContent = orig;
-window.location.href = p.url;
-}, 700);
-} else {
-window.location.href = p.url;
-}
+return true;
 }
 function changeQty(lineId, d) {
 const i = cart.findIndex(x => x.lineId === lineId);
 if (i < 0) return;
 cart[i].qty += d;
 if (cart[i].qty <= 0) cart.splice(i, 1);
-if (cart.length) lastCheckoutUrl = cart[cart.length - 1].url;
-renderCart();
+saveCart(); renderCart();
 }
 function renderCart() {
 const count = cart.reduce((s, i) => s + i.qty, 0);
-const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+const total = cart.reduce((s, i) => s + PRODUCTS[i.id].price * i.qty, 0);
 $('#cart-count').textContent = count;
+$('#bag').setAttribute('aria-label', 'Open bag, ' + count + (count === 1 ? ' item' : ' items'));
 const body = $('#cart-body'), foot = $('#cart-foot');
 if (!cart.length) {
 body.innerHTML = '<div class="cart-empty"><p>Your bag is empty.<br>Add something worth wearing.</p></div>';
@@ -78,60 +85,111 @@ return;
 }
 foot.style.display = 'block';
 $('#cart-total').textContent = '$' + total;
-$('#ship-note').textContent = 'Shipping calculated at Shopify checkout';
-body.innerHTML = cart.map(item => `
-<div class="cart-item">
-<div class="cart-item-img"><img src="${item.img}" alt="${item.name}" style="object-position:50% 40%;transform:scale(1.5);transform-origin:50% 40%"></div>
+const permalink = cart.every(i => variantId(PRODUCTS[i.id].handle, i.color, i.size));
+$('#ship-note').textContent = permalink ? 'Shipping calculated at Shopify checkout' : 'Checkout opens the product page on Shopify — pick colour & size there to confirm.';
+body.innerHTML = cart.map(item => { const p = PRODUCTS[item.id]; return `
+<div class="cart-item" data-line="${item.lineId}">
+<div class="cart-item-img"><img src="${IMG[item.color]}" alt="" style="object-position:50% 40%;transform:scale(1.5);transform-origin:50% 40%"></div>
 <div class="ci-info">
-<div><div class="ci-name">${item.name}</div><div class="ci-sub">${item.color} · Size ${item.size}</div></div>
-<div class="ci-price">$${item.price * item.qty}</div>
-<div class="ci-qty"><button type="button" aria-label="Decrease" data-q="${item.lineId}" data-d="-1">−</button><span>${item.qty}</span><button type="button" aria-label="Increase" data-q="${item.lineId}" data-d="1">+</button></div>
+<div><div class="ci-name">${p.name}</div><div class="ci-sub">${COLOR_LABELS[item.color]} · Size ${item.size}</div></div>
+<div class="ci-price">$${p.price * item.qty}</div>
+<div class="ci-qty"><button type="button" aria-label="Decrease ${p.name} ${item.size}" data-q="${item.lineId}" data-d="-1">−</button><span>${item.qty}</span><button type="button" aria-label="Increase ${p.name} ${item.size}" data-q="${item.lineId}" data-d="1">+</button></div>
 </div>
-</div>`).join('');
+</div>`; }).join('');
 }
+let lastFocus = null;
 function openCart() {
+lastFocus = document.activeElement;
 $('#cart').classList.add('show'); $('#overlay').classList.add('show');
 $('#cart').setAttribute('aria-hidden', 'false');
 document.body.classList.add('lock');
+$('#cartClose').focus({ preventScroll: true });
 }
 function closeCart() {
+if (!$('#cart').classList.contains('show')) return;
 $('#cart').classList.remove('show'); $('#overlay').classList.remove('show');
 $('#cart').setAttribute('aria-hidden', 'true');
 document.body.classList.remove('lock');
+if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
 }
 function toggleCart() { $('#cart').classList.contains('show') ? closeCart() : openCart(); }
-function goCheckout() {
-if (!cart.length) return;
-window.location.href = cart[cart.length - 1].url || lastCheckoutUrl;
-}
+function goCheckout() { const u = checkoutUrl(); if (u) window.location.href = u; }
 $('#bag').addEventListener('click', toggleCart);
 $('#cartClose').addEventListener('click', closeCart);
 $('#overlay').addEventListener('click', closeCart);
 $('#keep').addEventListener('click', closeCart);
 $('#checkout').addEventListener('click', goCheckout);
 $('#cart-body').addEventListener('click', e => { const b = e.target.closest('[data-q]'); if (b) changeQty(b.dataset.q, +b.dataset.d); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCart(); setMenu(false); } });
+/* Size guide */
+const sg = $('#sg'); let sgFrom = null;
+function openSG() { sgFrom = document.activeElement; sg.hidden = false; document.body.classList.add('lock'); $('#sgClose').focus(); }
+function closeSG() { if (sg.hidden) return; sg.hidden = true; document.body.classList.remove('lock'); sgFrom && sgFrom.focus && sgFrom.focus(); }
+$$('[data-sg]').forEach(b => b.addEventListener('click', openSG));
+$('#sgClose').addEventListener('click', closeSG);
+sg.addEventListener('click', e => { if (e.target === sg) closeSG(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeSG(); closeCart(); setMenu(false); } });
+/* Collection cards: size required */
 $$('.card').forEach(card => {
-const key = card.dataset.product;
-$$('.sw', card).forEach(sw => sw.addEventListener('click', () => setColor(sw, key, sw.dataset.color)));
-$$('.size-pill', card).forEach(p => p.addEventListener('click', () => {
-$$('.size-pill', card).forEach(x => { x.classList.remove('sel'); x.setAttribute('aria-pressed', 'false'); });
-p.classList.add('sel'); p.setAttribute('aria-pressed', 'true');
+const key = card.dataset.product, btn = $('.quick-add', card);
+const sync = () => { const ok = !!selectedSize(card); btn.setAttribute('aria-disabled', ok ? 'false' : 'true'); btn.textContent = ok ? 'Add to Bag' : 'Select a size'; };
+$$('.sw', card).forEach(sw => sw.addEventListener('click', () => {
+card.dataset.color = sw.dataset.color;
+$$('.sw', card).forEach(s => s.setAttribute('aria-pressed', s === sw ? 'true' : 'false'));
+$('.cl', card).textContent = COLOR_LABELS[sw.dataset.color];
+swapImg(document.getElementById('img-' + key), IMG[sw.dataset.color], PRODUCTS[key].name + ' — ' + COLOR_LABELS[sw.dataset.color]);
 }));
-$('.quick-add', card).addEventListener('click', e => quickAdd(key, e.currentTarget));
+bindSizes(card, sync); sync();
+btn.addEventListener('click', () => {
+const size = selectedSize(card);
+if (!size) { $('.sizes', card).classList.add('need'); setTimeout(() => $('.sizes', card).classList.remove('need'), 900); return; }
+addToCart(key, card.dataset.color || 'BLK', size);
 });
-$$('.chip-f').forEach(btn => btn.addEventListener('click', () => {
-$$('.chip-f').forEach(b => b.classList.remove('active'));
-btn.classList.add('active');
-const cat = btn.dataset.f;
-$$('.card').forEach(c => c.classList.toggle('hide', !(cat === 'all' || (c.dataset.cat || '').includes(cat))));
+});
+/* Buy-box */
+const buy = { p: 'hdy', color: 'BLK', size: null };
+const buyImg = $('#buyImg'), buyStage = $('#buyStage'), buyAdd = $('#buyAdd'), buyMsg = $('#buyMsg');
+function buySync() {
+const ok = !!buy.size;
+buyAdd.setAttribute('aria-disabled', ok ? 'false' : 'true');
+buyAdd.textContent = ok ? 'Add to Bag — $' + PRODUCTS[buy.p].price : 'Select a size';
+if (ok) buyMsg.textContent = '';
+}
+function buyView() {
+buyStage.dataset.view = buy.p;
+$('#buyCl').textContent = COLOR_LABELS[buy.color];
+$('#buyDesc').textContent = PRODUCTS[buy.p].desc;
+const z = $('#buyZoom'); const canZoom = buy.p !== 'pnt';
+z.hidden = !canZoom; if (!canZoom) { buyStage.dataset.zoom = '0'; z.setAttribute('aria-pressed', 'false'); }
+swapImg(buyImg, IMG[buy.color], PRODUCTS[buy.p].name + ' — ' + COLOR_LABELS[buy.color]);
+buySync();
+}
+$$('.buy-prod [data-p]').forEach(b => b.addEventListener('click', () => {
+buy.p = b.dataset.p; $$('.buy-prod [data-p]').forEach(x => x.setAttribute('aria-checked', x === b ? 'true' : 'false')); buyView();
 }));
+$$('#buySw .sw').forEach(sw => sw.addEventListener('click', () => {
+buy.color = sw.dataset.color; $$('#buySw .sw').forEach(s => s.setAttribute('aria-pressed', s === sw ? 'true' : 'false')); buyView();
+}));
+bindSizes($('#buySz'), s => { buy.size = s; buySync(); });
+$('#buyZoom').addEventListener('click', e => { const on = buyStage.dataset.zoom !== '1'; buyStage.dataset.zoom = on ? '1' : '0'; e.currentTarget.setAttribute('aria-pressed', on); });
+buyAdd.addEventListener('click', () => {
+if (!buy.size) { buyMsg.textContent = 'Choose a size first.'; $('#buySz').classList.add('need'); setTimeout(() => $('#buySz').classList.remove('need'), 900); return; }
+addToCart(buy.p, buy.color, buy.size);
+});
+/* Hook for a future 360 sprite / 3D viewer. Intentionally a no-op: no sprite or model exists yet. */
+function initTurntable() { const src = buyStage.dataset.sprite; if (!src) return; /* implement sprite scrub here when assets exist */ }
+initTurntable();
+buySync(); renderCart();
+/* Sticky "Shop Drop 1" pill: hidden while the buy-box is in view or at the very top */
+const pill = $('#shopPill');
+if ('IntersectionObserver' in window) {
+let inView = true;
+new IntersectionObserver(es => es.forEach(e => { inView = e.isIntersecting; pill.classList.toggle('show', !inView && scrollY > innerHeight * .5); }), { threshold: 0.15 }).observe($('#buy'));
+addEventListener('scroll', () => pill.classList.toggle('show', !inView && scrollY > innerHeight * .5), { passive: true });
+}
 $('#nl').addEventListener('submit', e => {
-e.preventDefault();
 const inp = $('#nl-email');
-if (!inp.value.includes('@')) { alert('Enter a valid email.'); return; }
-inp.value = '';
-alert("You're on the list. First to know about every Deji drop.");
+if (!inp.checkValidity()) { e.preventDefault(); inp.reportValidity(); }
+/* otherwise the form posts to Shopify's customer signup (form_type=customer, tags=newsletter) */
 });
 const nav = $('#nav'), menu = $('#menu'), burger = $('#burger');
 function setMenu(on) {
