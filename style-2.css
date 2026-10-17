@@ -255,3 +255,4 @@ footer{padding-bottom:calc(var(--s4) + 80px)}
 .cart-item-img img{width:100%;height:100%;object-fit:cover;transform:none!important}
 #checkout[aria-disabled=true]{font-size:11px;letter-spacing:.12em}
 @media (max-width:768px){.minis{grid-template-columns:1fr 1fr}.minis .mini:last-child{grid-column:1/-1}}
+#checkout[hidden],.cart-lines[hidden]{display:none}
