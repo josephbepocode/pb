@@ -161,9 +161,22 @@ btn.setAttribute('aria-disabled', 'false'); btn.textContent = 'Checkout →';
 note.textContent = 'Shipping calculated at Shopify checkout';
 } else {
 btn.hidden = true; lines.hidden = false;
-note.textContent = 'Open each item on Shopify — they collect in one Shopify cart. For items without a direct link, pick the same colour and size there.';
+const anyAdd = plan.lines.some(x => x.hasId);
+note.textContent = anyAdd
+? 'Add buttons put the item straight into your Shopify cart. Open buttons take you to the product page: choose the colour, size and quantity shown, then Add to cart.'
+: 'Each button opens the product page on Shopify: choose the colour, size and quantity shown, then Add to cart.';
+const withIds = plan.lines.filter(x => x.hasId);
+if (withIds.length > 1) {
+/* One-click add for all lines with IDs via /cart/update (adds/sets qty in the existing cart). UNTESTED until the store is live. */
+const all = el('a', 'btn btn-bone cart-line-link', 'Add all ' + withIds.length + ' linked items on Shopify ↗');
+all.href = SHOP + '/cart/update?' + withIds.map(x => 'updates[' + encodeURIComponent(variantId(PRODUCTS[x.line.id].handle, x.line.color, x.line.size)) + ']=' + x.line.qty).join('&');
+all.target = '_blank'; all.rel = 'noopener'; lines.append(all);
+}
 plan.lines.forEach(({ line, url }) => {
-const a = el('a', 'btn btn-line cart-line-link', (plan.lines.find(x => x.line === line).hasId ? 'Add ' : 'Open ') + PRODUCTS[line.id].short + ' — ' + line.color + ' / ' + line.size + ' on Shopify ↗');
+const q = line.qty > 1 ? ' x' + line.qty : '';
+const a = el('a', 'btn btn-line cart-line-link', plan.lines.find(x => x.line === line).hasId
+? 'Add ' + PRODUCTS[line.id].short + ' — ' + line.color + ' / ' + line.size + q + ' on Shopify ↗'
+: 'Open ' + PRODUCTS[line.id].short + ', choose ' + line.color + ' / ' + line.size + q + ' ↗');
 a.href = url; a.target = '_blank'; a.rel = 'noopener'; lines.append(a);
 });
 }
@@ -304,8 +317,8 @@ new IntersectionObserver(es => es.forEach(e => { inView = e.isIntersecting; upd(
 addEventListener('scroll', upd, { passive: true });
 }
 
-/* Newsletter: closed while the store is down. When live, posts to Shopify in a hidden iframe
-   (cross-origin response is unreadable), so we never claim success — neutral wording only. */
+/* Newsletter: closed while the store is down. When live, the form submits normally to Shopify in a
+   new tab (target=_blank) so Shopify's captcha / thank-you page is shown. We never claim the outcome. */
 const nl = $('#nl'), nlMsg = $('#nl-msg');
 if (!STORE_LIVE) {
 nl.hidden = true; const note = $('#nl-note'); if (note) note.hidden = true;
@@ -314,7 +327,7 @@ nlMsg.textContent = 'Early access opens with the store.';
 nl.addEventListener('submit', e => {
 const inp = $('#nl-email');
 if (!inp.checkValidity()) { e.preventDefault(); nlMsg.textContent = 'Enter a valid email.'; inp.focus(); return; }
-nlMsg.textContent = 'Submitted. Check your inbox.';
+nlMsg.textContent = 'Opened Shopify in a new tab to finish signing up.';
 });
 }
 const nav = $('#nav'), menu = $('#menu'), burger = $('#burger');

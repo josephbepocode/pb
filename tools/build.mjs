@@ -2,7 +2,9 @@
 // config in app.js (CONFIG-START … CONFIG-END). Usage: node tools/build.mjs [--check]
 // --check exits 1 if index.html is out of sync (use before every commit / in CI).
 import fs from 'node:fs';
-const root = new URL('..', import.meta.url).pathname;
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..') + path.sep;
 const js = fs.readFileSync(root + 'app.js', 'utf8');
 const cfg = js.slice(js.indexOf('/* CONFIG-START'), js.indexOf('/* CONFIG-END */'));
 const { PRODUCTS, SITE, SHOP } = new Function(cfg + '; return { PRODUCTS, SITE, SHOP };')();

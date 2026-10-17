@@ -109,9 +109,10 @@ body.lock{overflow:hidden}
 .hero-cap::before{content:"";width:48px;height:1px;background:var(--bone);opacity:.6}
 .hero-h{font-size:clamp(120px,21vw,360px);line-height:.8;margin-left:-.04em}
 .hl{display:block;overflow:hidden;padding:.08em .06em .06em 0;margin:-.08em 0 -.06em}
-.hl>span{display:block;animation:up 1.5s var(--ease) both;animation-delay:calc(var(--i)*140ms + 350ms)}
+.hl>span{display:block;animation:up .9s var(--ease) both;animation-delay:calc(var(--i)*60ms)}
 .hl em{padding-right:.05em}
-@keyframes up{from{transform:translateY(112%) rotate(2deg)}to{transform:none}}
+@keyframes up{from{transform:translateY(12%);opacity:.2}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.hl>span{animation:none}}
 .hero-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:var(--s5);margin-top:var(--s6);flex-wrap:wrap}
 .hero-foot p{max-width:42ch;color:var(--grey);font-size:15px}
 .hero-cta{display:flex;gap:var(--s2);flex-wrap:wrap}
@@ -165,7 +166,7 @@ body.lock{overflow:hidden}
 .big small{font-family:var(--sans);-webkit-text-stroke:0;color:var(--grey);font-size:12px;letter-spacing:.22em;margin-bottom:var(--s3)}
 .trio{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s1);height:100%}
 .trio .crop{--ar:auto}
-.trio figcaption{position:absolute;left:12px;bottom:12px;z-index:2;color:var(--bone)}
+.trio figcaption{position:absolute;left:8px;bottom:8px;z-index:2;color:var(--bone);background:rgba(10,10,10,.82);padding:4px 8px;line-height:1.4}
 .hs-bar{position:absolute;left:var(--gut);right:var(--gut);bottom:var(--s5);height:1px;background:var(--line);z-index:2}
 .hs-bar i{position:absolute;left:0;top:0;height:1px;width:100%;background:var(--bone);transform-origin:left;transform:scaleX(var(--p,0))}
 .native .hs-pin{position:static;height:auto;padding:var(--sec) 0 var(--s10);overflow:visible}
@@ -336,8 +337,7 @@ body.lock{overflow:hidden}
 <p class="cap reveal">Early access</p>
 <h2 class="serif" data-split>Get early access <em>to every drop.</em></h2>
 <p class="cap reveal" id="nl-note">No spam. One email per drop. Unsubscribe anytime.</p>
-<iframe name="nl-frame" id="nl-frame" title="Newsletter signup response" hidden></iframe>
-<form class="nl-form reveal" id="nl" method="post" target="nl-frame" action="https://9z9z0b-ic.myshopify.com/contact#contact_form" accept-charset="UTF-8"><input type="hidden" name="form_type" value="customer"><input type="hidden" name="utf8" value="✓"><input type="hidden" name="contact[tags]" value="newsletter"><label class="sr" for="nl-email">Email</label><input type="email" id="nl-email" name="contact[email]" required placeholder="Enter your email" autocomplete="email"><button type="submit">Subscribe →</button></form>
+<form class="nl-form reveal" id="nl" method="post" target="_blank" rel="noopener" action="https://9z9z0b-ic.myshopify.com/contact#contact_form" accept-charset="UTF-8"><input type="hidden" name="form_type" value="customer"><input type="hidden" name="utf8" value="✓"><input type="hidden" name="contact[tags]" value="newsletter"><label class="sr" for="nl-email">Email</label><input type="email" id="nl-email" name="contact[email]" required placeholder="Enter your email" autocomplete="email"><button type="submit">Subscribe →</button></form>
 <p class="nl-msg" id="nl-msg" role="status" aria-live="polite"></p>
 </div></section>
 </main>
