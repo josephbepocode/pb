@@ -1,19 +1,29 @@
 /* ── STORE CONFIG (single source of truth) ───────────────────────────────── */
 /* CONFIG-START — tools/build.mjs evaluates this block to write static prices + JSON-LD into index.html */
-const STORE_LIVE = false; // 9z9z0b-ic currently returns HTTP 402. Flip to true once the Shopify plan is active.
+const STORE_LIVE = false; // Plan is active (Basic), but 9z9z0b-ic is still password-protected and all inventory is 0.
+// Flip to true only once the storefront password is removed AND stock exists; until then buttons stay closed.
 const SHOP_DOMAIN = '9z9z0b-ic.myshopify.com';
 const SHOP = 'https://' + SHOP_DOMAIN;
 const SITE = 'https://shop.bepojoseph.xyz/';
-/* VARIANT_MAP: handle → colour → size → numeric Shopify variant ID.
-   LEFT EMPTY ON PURPOSE (store 402, no IDs in any file). Fill from Shopify admin
-   (Products → variant → URL …/variants/<ID>) or SHOP/products/<handle>.js once live.
-   When every bag line has an ID, checkout uses SHOP/cart/<id>:<qty>,<id>:<qty>.
-   If any ID is missing, the bag lists per-line "Open on Shopify" links instead —
-   no line is ever dropped. */
+/* VARIANT_MAP: handle → colour → size → numeric Shopify variant ID (store 9z9z0b-ic, USD).
+   Real IDs from Shopify Admin, Oct 24 2026. When every bag line has an ID, checkout uses
+   SHOP/cart/<id>:<qty>,<id>:<qty>. If any ID is missing, the bag lists per-line links instead. */
 const VARIANT_MAP = {
-'hdy-001-pullover': { BLK: {}, HGR: {}, BON: {} },
-'pnt-001-extra-wide': { BLK: {}, HGR: {}, BON: {} },
-'drop1-set': { BLK: {}, HGR: {}, BON: {} }
+'hdy-001-pullover': {
+  BLK: { 'S': '48891135688894', 'M': '48891135721662', 'L': '48891135754430', 'XL': '48891135787198', '2XL': '48891135819966' },
+  HGR: { 'S': '48891135852734', 'M': '48891135885502', 'L': '48891135918270', 'XL': '48891135951038', '2XL': '48891135983806' },
+  BON: { 'S': '48891136016574', 'M': '48891136049342', 'L': '48891136082110', 'XL': '48891136114878', '2XL': '48891136147646' }
+},
+'pnt-001-extra-wide': {
+  BLK: { 'S': '48891136245950', 'M': '48891136278718', 'L': '48891136311486', 'XL': '48891136344254', '2XL': '48891136377022' },
+  HGR: { 'S': '48891136409790', 'M': '48891136442558', 'L': '48891136475326', 'XL': '48891136508094', '2XL': '48891136540862' },
+  BON: { 'S': '48891136573630', 'M': '48891136606398', 'L': '48891136639166', 'XL': '48891136671934', '2XL': '48891136704702' }
+},
+'drop1-set': {
+  BLK: { 'S': '48891136770238', 'M': '48891136803006', 'L': '48891136835774', 'XL': '48891136868542', '2XL': '48891136901310' },
+  HGR: { 'S': '48891136934078', 'M': '48891136966846', 'L': '48891136999614', 'XL': '48891137032382', '2XL': '48891137065150' },
+  BON: { 'S': '48891137097918', 'M': '48891137130686', 'L': '48891137163454', 'XL': '48891137196222', '2XL': '48891137228990' }
+}
 };
 const SIZES = ['S', 'M', 'L', 'XL', '2XL'];
 const COLORS = {

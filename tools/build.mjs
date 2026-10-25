@@ -17,8 +17,7 @@ let out = html.replace(/(<[^>]*data-price="(\w+)"[^>]*>)[^<]*(<\/)/g, (m, open, 
 const ld = Object.values(PRODUCTS).map(p => ({
   '@context': 'https://schema.org', '@type': 'Product', name: p.name, sku: p.sku,
   brand: { '@type': 'Brand', name: 'Deji' }, description: p.desc, image: SITE + 'assets/og-drop1.jpg',
-  // priceCurrency intentionally omitted: store currency unconfirmed
-  offers: { '@type': 'Offer', price: p.price.toFixed(2), url: SHOP + '/products/' + p.handle }
+  offers: { '@type': 'Offer', price: p.price.toFixed(2), priceCurrency: 'USD', url: SHOP + '/products/' + p.handle }
 }));
 const block = '<script type="application/ld+json" id="product-ld">' + JSON.stringify(ld) + '</script>';
 if (/<script type="application\/ld\+json" id="product-ld">.*?<\/script>/s.test(out)) out = out.replace(/<script type="application\/ld\+json" id="product-ld">.*?<\/script>/s, block);
